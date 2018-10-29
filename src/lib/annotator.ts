@@ -1,8 +1,9 @@
 import cloneDeep from 'lodash/cloneDeep';
+import defaults from 'lodash/defaults';
 
 interface Token {
   text: string;
-  userDefined: boolean;
+  userDefined?: boolean;
 }
 
 export interface Sentence {
@@ -86,6 +87,24 @@ export class Sentence {
     s.data[token].text = left
     const newToken: Token = { text: right, userDefined: false }
     s.data.splice(token + 1, 0, newToken)
+    return s
+  }
+
+  static updateToken(s: Sentence, token: number, data: Token): Sentence {
+    s = <Sentence>cloneDeep(s);
+    s.data[token] = defaults(data, s.data[token])
+    return s
+  }
+
+  static insertToken(s: Sentence, token: number, data: Token): Sentence {
+    s = <Sentence>cloneDeep(s);
+    s.data.splice(token, 0, data);
+    return s
+  }
+
+  static deleteToken(s: Sentence, token: number): Sentence {
+    s = <Sentence>cloneDeep(s);
+    s.data.splice(token, 1);
     return s
   }
 }

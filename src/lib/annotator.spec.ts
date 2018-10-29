@@ -31,12 +31,11 @@ const sentence = {
   count: 1,
   updated: 0
 };
+const texts = (s: Sentence) => s.data.map(({ text }) => text);
 
 test('sentence toString', t => {
   t.is(Sentence.toString(sentence), 'remember that my nickname is Boss');
 });
-
-const texts = (s: Sentence) => s.data.map(({ text }) => text);
 
 test('token extendRight', t => {
   let s
@@ -76,4 +75,22 @@ test('token split', t => {
 
   s = Sentence.splitToken(sentence, 1, 2);
   t.deepEqual(texts(s), ['remember that my ', 'ni', 'ckname', ' is ', 'Boss']);
+});
+
+test('token update', t => {
+  let s
+  s = Sentence.updateToken(sentence, 3, { text: 'Johnny' });
+  t.deepEqual(texts(s), ['remember that my ', 'nickname', ' is ', 'Johnny']);
+});
+
+test('token insert', t => {
+  let s
+  s = Sentence.insertToken(sentence, 3, { text: 'Johnny' });
+  t.deepEqual(texts(s), ['remember that my ', 'nickname', ' is ', 'Johnny', 'Boss']);
+});
+
+test('token delete', t => {
+  let s
+  s = Sentence.deleteToken(sentence, 3);
+  t.deepEqual(texts(s), ['remember that my ', 'nickname', ' is ']);
 });
