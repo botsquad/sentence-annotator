@@ -68,3 +68,12 @@ test('token extendLeft', t => {
   s = Sentence.extendLeft(sentence, 1, 1000);
   t.deepEqual(texts(s), ['remember that my nickname', ' is ', 'Boss']);
 });
+
+test('token split', t => {
+  let s
+  s = Sentence.splitToken(sentence, 0, 2);
+  t.deepEqual(texts(s), ['re', 'member that my ', 'nickname', ' is ', 'Boss']);
+
+  s = Sentence.splitToken(sentence, 1, 2);
+  t.deepEqual(texts(s), ['remember that my ', 'ni', 'ckname', ' is ', 'Boss']);
+});

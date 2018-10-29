@@ -10,6 +10,12 @@ export interface Sentence {
   data: Token[];
 }
 
+function strSplit(s: string, i: number) {
+  const left = s.substr(0, i)
+  const right = s.substr(i)
+  return { left, right }
+}
+
 export class Sentence {
   static toString(s: Sentence): string {
     return s.data.map(({ text }) => text).join('');
@@ -22,7 +28,7 @@ export class Sentence {
     let curDelta = delta
     while (true) {
       if (curToken == s.data.length) {
-      // cannot extend further
+        // cannot extend further
         break
       }
       if (curDelta < s.data[curToken].text.length) {
@@ -48,7 +54,7 @@ export class Sentence {
     let curDelta = delta
     while (true) {
       if (curToken < 0) {
-      // cannot extend further
+        // cannot extend further
         break
       }
       if (curDelta < s.data[curToken].text.length) {
@@ -67,6 +73,19 @@ export class Sentence {
         token -= 1
       }
     }
+    return s
+  }
+
+  static splitToken(s: Sentence, token: number, index: number): Sentence {
+    s = <Sentence>cloneDeep(s);
+    if (token < 0 || token > s.data.length - 1 || index >= s.data[token].text.length) {
+      return s
+    }
+
+    const { left, right } = strSplit(s.data[token].text, index)
+    s.data[token].text = left
+    const newToken: Token = { text: right, userDefined: false }
+    s.data.splice(token + 1, 0, newToken)
     return s
   }
 }
