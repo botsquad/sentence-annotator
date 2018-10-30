@@ -1,14 +1,15 @@
 import cloneDeep from 'lodash/cloneDeep';
 import defaults from 'lodash/defaults';
 
-interface Token {
+export interface SentenceToken {
   text: string;
   userDefined?: boolean;
+  alias?: string;
 }
 
 export interface Sentence {
   id: string;
-  data: Token[];
+  data: SentenceToken[];
 }
 
 function strSplit(s: string, i: number) {
@@ -86,18 +87,18 @@ export class Sentence {
 
     const { left, right } = strSplit(s.data[token].text, index)
     s.data[token].text = left
-    const newToken: Token = { text: right, userDefined: false }
+    const newToken: SentenceToken = { text: right, userDefined: false }
     s.data.splice(token + 1, 0, newToken)
     return s
   }
 
-  static updateToken(s: Sentence, token: number, data: Token): Sentence {
+  static updateToken(s: Sentence, token: number, data: SentenceToken): Sentence {
     s = <Sentence>cloneDeep(s);
     s.data[token] = defaults(data, s.data[token])
     return s
   }
 
-  static insertToken(s: Sentence, token: number, data: Token): Sentence {
+  static insertToken(s: Sentence, token: number, data: SentenceToken): Sentence {
     s = <Sentence>cloneDeep(s);
     s.data.splice(token, 0, data);
     return s

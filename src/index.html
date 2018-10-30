@@ -1,9 +1,46 @@
 <html>
-<head>
+  <head>
+    <style>
+     .sequence-editor span {
+       display: inline-block;
+     }
+     .sequence-editor span.meta {
+       background: #ff99ff;
+     }
+     .sequence-editor span.selected {
+       background: yellow;
+     }
+     .sequence-editor span .handle {
+       position: relative;
+       display: inline-block;
+     }
+     .sequence-editor span .handle div.line {
+       display: inline-block;
+       width: 2px;
+       height: 0.9em;
+       background: red;
+     }
+     .sequence-editor span .handle div.dot {
+       position: absolute;
+       width: 10px; height: 10px;
+       background: red;
+       top: 100%;
+       border-bottom-left-radius: 5px;
+       border-bottom-right-radius: 5px;
+     }
+     .sequence-editor span .handle.first div.dot {
+       border-top-left-radius: 5px;
+       right: 0;
+     }
+     .sequence-editor span .handle.last div.dot {
+       border-top-right-radius: 5px;
+       left: 0;
+     }
 
-</head>
-<body>
+    </style>
+  </head>
+  <body>
     <div id="root"></div>
     <script src="/example.bundle.js"></script>
-</body>
+  </body>
 </html>
