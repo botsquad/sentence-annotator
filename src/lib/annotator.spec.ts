@@ -117,4 +117,18 @@ describe('Sentence', () => {
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ']);
   });
 
+  it('token select split', () => {
+
+    let s
+    s = Sentence.splitSelectToken(sentence, 0, 9, 13);
+    expect(texts(s)).toEqual(['remember ', 'that', ' my ', 'nickname', ' is ', 'Boss']);
+
+    s = Sentence.splitSelectToken(sentence, 0, 0, 2);
+    expect(texts(s)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
+
+    s = Sentence.splitSelectToken(sentence, 1, 4, 8);
+    expect(texts(s)).toEqual(['remember that my ', 'nick', 'name', ' is ', 'Boss']);
+
+  });
+
 });

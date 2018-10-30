@@ -15,7 +15,7 @@ export interface Sentence {
 function strSplit(s: string, i: number) {
   const left = s.substr(0, i)
   const right = s.substr(i)
-  return { left, right }
+  return [ left, right ]
 }
 
 export class Sentence {
@@ -27,7 +27,7 @@ export class Sentence {
 
     if (delta < 0) {
       if (token == s.data.length -1) {
-        const { left, right} = strSplit(s.data[token].text, s.data[token].text.length + delta)
+        const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
         s.data.push({ userDefined: false, text: right })
         return s
@@ -64,7 +64,7 @@ export class Sentence {
 
     if (delta < 0) {
       if (token == 0) {
-        const { left, right} = strSplit(s.data[token].text, - delta)
+        const [ left, right ] = strSplit(s.data[token].text, - delta)
         s.data[token].text = right
         s.data.splice(0, 0, { userDefined: false, text: left })
         return s
@@ -105,7 +105,7 @@ export class Sentence {
       return s
     }
 
-    const { left, right } = strSplit(s.data[token].text, index)
+    const [ left, right ] = strSplit(s.data[token].text, index)
     s.data[token].text = left
     const newToken: SentenceToken = { text: right, userDefined: false }
     s.data.splice(token + 1, 0, newToken)
@@ -127,6 +127,32 @@ export class Sentence {
   static deleteToken(s: Sentence, token: number): Sentence {
     s = <Sentence>cloneDeep(s);
     s.data.splice(token, 1);
+    return s
+  }
+
+  static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object): Sentence {
+    s = <Sentence>cloneDeep(s);
+
+    const tokenData = s.data[token]
+    s.data.splice(token, 1)
+
+    let [ first, rest ] = strSplit(tokenData.text, start)
+
+    if (first.length > 0 ) {
+      // insert token left
+      s.data.splice(token, 0, { userDefined: false, text: first })
+      token++
+    }
+
+    let [ main, remain ] = strSplit(rest, end - start)
+    if (main.length) {
+      s.data.splice(token, 0, { ...tokenData, ...add, text: main })
+      token++
+    }
+    if (remain.length) {
+      s.data.splice(token, 0, { userDefined: false, text: remain })
+    }
+
     return s
   }
 }

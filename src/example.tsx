@@ -11,7 +11,7 @@ const sentence = {
   id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',
   data: [
     {
-      text: 'remember that my ',
+      text: 'whatever you do, please please do remember that my ',
       userDefined: false
     },
     {
