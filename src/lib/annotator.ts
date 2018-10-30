@@ -22,7 +22,7 @@ export class Sentence {
     return s.data.map(({ text }) => text).join('');
   }
   static extendRight(s: Sentence, token: number, delta: number): Sentence {
-    s = cloneDeep(s);
+    s = <Sentence>cloneDeep(s);
 
     // "eat" tokens while delta > next token text length
     let curToken = token + 1
@@ -47,8 +47,9 @@ export class Sentence {
     }
     return s;
   }
+
   static extendLeft(s: Sentence, token: number, delta: number): Sentence {
-    s = cloneDeep(s);
+    s = <Sentence>cloneDeep(s);
 
     // "eat" tokens while delta > next token text length
     let curToken = token - 1
