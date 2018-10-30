@@ -3,8 +3,8 @@ webpackConfig.mode = 'production';
 
 module.exports = function(config) {
   config.set({
-    singleRun: true,
-    
+    singleRun: !process.env.TEST_MODE,
+
     browsers: [
       'PhantomJS'
     ],

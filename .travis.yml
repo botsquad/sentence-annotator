@@ -7,6 +7,3 @@ node_js:
 cache:
   directories:
   - "$HOME/.npm"
-after_success:
-  - npx nyc report --reporter=lcov | npx codecov
-  - npm run cov:check
