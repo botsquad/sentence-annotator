@@ -25,6 +25,16 @@ export class Sentence {
   static extendRight(s: Sentence, token: number, delta: number): Sentence {
     s = <Sentence>cloneDeep(s);
 
+    if (delta < 0) {
+      if (token == s.data.length -1) {
+        const { left, right} = strSplit(s.data[token].text, s.data[token].text.length + delta)
+        s.data[token].text = left
+        s.data.push({ userDefined: false, text: right })
+        return s
+      }
+      return this.extendLeft(s, token + 1, -delta)
+    }
+
     // "eat" tokens while delta > next token text length
     let curToken = token + 1
     let curDelta = delta
@@ -51,6 +61,16 @@ export class Sentence {
 
   static extendLeft(s: Sentence, token: number, delta: number): Sentence {
     s = <Sentence>cloneDeep(s);
+
+    if (delta < 0) {
+      if (token == 0) {
+        const { left, right} = strSplit(s.data[token].text, - delta)
+        s.data[token].text = right
+        s.data.splice(0, 0, { userDefined: false, text: left })
+        return s
+      }
+      return this.extendRight(s, token - 1, -delta)
+    }
 
     // "eat" tokens while delta > next token text length
     let curToken = token - 1

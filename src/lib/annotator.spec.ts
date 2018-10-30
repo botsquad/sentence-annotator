@@ -53,6 +53,22 @@ describe('Sentence', () => {
     s = Sentence.extendRight(sentence, 0, 100000);
     expect(texts(s)).toEqual(['remember that my nickname is Boss']);
 
+    // move nevative
+    s = Sentence.extendRight(sentence, 0, -2);
+    expect(texts(s)).toEqual(['remember that m', 'y nickname', ' is ', 'Boss']);
+
+    // move negative on last token creates new token
+    s = Sentence.extendRight(sentence, 3, -2);
+    expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ', 'Bo', 'ss']);
+
+    // empty tokens are removed
+    s = Sentence.extendRight(sentence, 0, 7);
+    expect(texts(s)).toEqual(['remember that my nicknam', 'e', ' is ', 'Boss']);
+
+    // empty tokens are removed
+    s = Sentence.extendRight(sentence, 0, 8);
+    expect(texts(s)).toEqual(['remember that my nickname', ' is ', 'Boss']);
+
   });
 
   it('token extendLeft', () => {
@@ -64,6 +80,14 @@ describe('Sentence', () => {
     // eat tokens left
     s = Sentence.extendLeft(sentence, 1, 1000);
     expect(texts(s)).toEqual(['remember that my nickname', ' is ', 'Boss']);
+
+    // move nevative
+    s = Sentence.extendLeft(sentence, 1, -2);
+    expect(texts(s)).toEqual(['remember that my ni', 'ckname', ' is ', 'Boss']);
+
+    // move negative on last token creates new token
+    s = Sentence.extendLeft(sentence, 0, -2);
+    expect(texts(s)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
   });
 
   it('token split', () => {
