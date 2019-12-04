@@ -19,6 +19,12 @@ function strSplit(s: string, i: number) {
 }
 
 export class Sentence {
+  static setTokenText(s: Sentence, index: number, text: string) {
+    s = <Sentence>cloneDeep(s)
+    s.data[index].text = text
+    return s
+  }
+
   static toString(s: Sentence): string {
     return s.data.map(({ text }) => text).join('');
   }

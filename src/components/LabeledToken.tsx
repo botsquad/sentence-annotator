@@ -81,7 +81,7 @@ export default class Token extends React.Component<Props, State> {
 
   renderHandle(left: boolean) {
     return (
-      <span className={"handle " + (left ? "left" : "right")}>
+      <span className={"handle " + (left ? "left" : "right")} contentEditable={false}>
         <div className="dot" onMouseDown={e => this.dragStart(e, left ? DragMode.LEFT : DragMode.RIGHT)}></div>
         <div className="line"></div>
       </span>

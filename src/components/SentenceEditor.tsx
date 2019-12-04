@@ -11,15 +11,21 @@ interface Props {
 interface State {
   selectedToken?: number;
   sentence: Sentence
+  contentDirty: boolean
 }
 
 export default class SentenceEditor extends React.Component<Props, State> {
   state: State = {
     selectedToken: null,
-    sentence: this.props.sentence
+    sentence: this.props.sentence,
+    contentDirty: false,
   }
 
   onTokenClick = (t, index) => {
+    if (this.state.contentDirty) {
+      this.syncEditableContent()
+    }
+
     if (t.alias) {
       this.setState({ selectedToken: index })
     } else {
@@ -48,8 +54,13 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
   div = React.createRef<HTMLDivElement>()
 
-  syncInput = () => {
-    console.log('this.div.current', this.div.current)
+  syncEditableContent = () => {
+    const spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
+    let sentence = this.state.sentence
+    spans.forEach((span, index) => {
+      sentence = Sentence.setTokenText(sentence, index, span.innerText)
+    })
+    this.setState({ sentence, contentDirty: false })
   }
 
   render() {
@@ -59,7 +70,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
       <div className="sequence-editor"
         contentEditable
         suppressContentEditableWarning
-        onInput={this.syncInput}
+        onInput={() => this.setState({ contentDirty: true })}
         ref={this.div}>
         {sentence.data.map((value, index) =>
           value.alias
