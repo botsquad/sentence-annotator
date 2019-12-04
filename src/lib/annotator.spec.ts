@@ -121,13 +121,40 @@ describe('Sentence', () => {
 
     let s
     s = Sentence.splitSelectToken(sentence, 0, 9, 13);
-    expect(texts(s)).toEqual(['remember ', 'that', ' my ', 'nickname', ' is ', 'Boss']);
+    expect(texts(s.sentence)).toEqual(['remember ', 'that', ' my ', 'nickname', ' is ', 'Boss']);
+    expect(s.newToken).toEqual(1)
 
     s = Sentence.splitSelectToken(sentence, 0, 0, 2);
-    expect(texts(s)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
+    expect(texts(s.sentence)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
+    expect(s.newToken).toEqual(0)
 
     s = Sentence.splitSelectToken(sentence, 1, 4, 8);
-    expect(texts(s)).toEqual(['remember that my ', 'nick', 'name', ' is ', 'Boss']);
+    expect(texts(s.sentence)).toEqual(['remember that my ', 'nick', 'name', ' is ', 'Boss']);
+    expect(s.newToken).toEqual(2)
+  });
+
+  it('makes new text node when moving two labeled nodes away from each other', () => {
+
+    const sentence = {
+      id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',
+      data: [
+        {
+          alias: 'first',
+          text: 'Aap'
+        },
+        {
+          alias: 'first',
+          text: ' Noot'
+        },
+      ],
+      isTemplate: false,
+      count: 1,
+      updated: 0
+    };
+
+    let s
+    s = Sentence.extendLeft(sentence, 1, -1);
+    expect(texts(s)).toEqual(['Aap', ' ', 'Noot']);
 
   });
 

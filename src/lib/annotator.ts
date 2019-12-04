@@ -26,7 +26,7 @@ export class Sentence {
     s = <Sentence>cloneDeep(s);
 
     if (delta < 0) {
-      if (token == s.data.length -1) {
+      if (token == s.data.length -1 || s.data[token + 1].alias) {
         const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
         s.data.push({ userDefined: false, text: right })
@@ -63,10 +63,11 @@ export class Sentence {
     s = <Sentence>cloneDeep(s);
 
     if (delta < 0) {
-      if (token == 0) {
+      if (token == 0 || s.data[token -1].alias) {
+        // left border or aliased neighbour; do not extend left but create new token
         const [ left, right ] = strSplit(s.data[token].text, - delta)
         s.data[token].text = right
-        s.data.splice(0, 0, { userDefined: false, text: left })
+        s.data.splice(token, 0, { userDefined: false, text: left })
         return s
       }
       return this.extendRight(s, token - 1, -delta)
@@ -130,7 +131,7 @@ export class Sentence {
     return s
   }
 
-  static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object): Sentence {
+  static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object) {
     s = <Sentence>cloneDeep(s);
 
     const tokenData = s.data[token]
@@ -144,15 +145,18 @@ export class Sentence {
       token++
     }
 
+    let newToken = 0
+
     let [ main, remain ] = strSplit(rest, end - start)
     if (main.length) {
       s.data.splice(token, 0, { ...tokenData, ...add, text: main })
+      newToken = token
       token++
     }
     if (remain.length) {
       s.data.splice(token, 0, { userDefined: false, text: remain })
     }
 
-    return s
+    return { sentence: s, newToken }
   }
 }

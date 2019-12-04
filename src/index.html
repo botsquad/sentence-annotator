@@ -1,8 +1,12 @@
 <html>
   <head>
     <style>
+     .sequence-editor {
+       outline: none;
+     }
      .sequence-editor span {
        display: inline-block;
+       position: relative;
      }
      .sequence-editor span.meta {
        background: #ff99ff;
@@ -10,32 +14,38 @@
      .sequence-editor span.selected {
        background: yellow;
      }
-     .sequence-editor span .handle {
-       position: relative;
-       display: inline-block;
+
+     .sequence-editor span.meta .mouse-prevent {
+       position: absolute;
+       top: -10px; bottom: -10px; left: -10px; right: -10px;
      }
-     .sequence-editor span .handle div.line {
-       display: inline-block;
+
+     .sequence-editor span .handle {
+       position: absolute;
+       top: 0; bottom: 0;
        width: 2px;
-       height: 12px;
-       background: red;
+       background: #6666FF;
+     }
+     .sequence-editor span .handle.left {
+       left: -2px;
+     }
+     .sequence-editor span .handle.right {
+       right: -2px;
      }
      .sequence-editor span .handle div.dot {
        position: absolute;
        width: 10px; height: 10px;
-       background: red;
-       top: 100%;
-       border-bottom-left-radius: 5px;
-       border-bottom-right-radius: 5px;
+       background: #6666FF;
+       border-radius: 5px;
        cursor: pointer;
      }
-     .sequence-editor span .handle.first div.dot {
-       border-top-left-radius: 5px;
-       right: 0;
+     .sequence-editor span .handle.left div.dot {
+       right: -4px;
+       top: -7px;
      }
-     .sequence-editor span .handle.last div.dot {
-       border-top-right-radius: 5px;
-       left: 0;
+     .sequence-editor span .handle.right div.dot {
+       left: -4px;
+       bottom: -7px;
      }
 
     </style>

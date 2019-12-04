@@ -42,29 +42,43 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onUnlabeledTextSelect = (t, index, start, end) => {
-    const sentence = Sentence.splitSelectToken(this.state.sentence, index, start, end, { alias: "test" })
-    this.setState({ sentence, selectedToken: index + 1 })
+    const { sentence, newToken } = Sentence.splitSelectToken(this.state.sentence, index, start, end, { alias: "test" })
+    this.setState({ sentence, selectedToken: newToken })
+  }
+
+  div = React.createRef<HTMLDivElement>()
+
+  syncInput = () => {
+    console.log('this.div.current', this.div.current)
   }
 
   render() {
     const { sentence } = this.state
 
     return (
-      <div className="sequence-editor">
-        <h1>SentenceEditor component</h1>
-        {sentence.data.map((value, index) => {
-           if (value.alias) {
-             return <LabeledToken
-                      key={index}
-                      index={index}
-                      token={value}
-                      selected={index === this.state.selectedToken}
-                      onTokenExtendRight={this.onTokenExtendRight}
-                      onTokenExtendLeft={this.onTokenExtendLeft}
-                      onClick={this.onTokenClick} />
-           }
-           return <UnlabeledToken key={index} index={index} token={value} onSelect={this.onUnlabeledTextSelect} />
-        })}
+      <div className="sequence-editor"
+        contentEditable
+        suppressContentEditableWarning
+        onInput={this.syncInput}
+        ref={this.div}>
+        {sentence.data.map((value, index) =>
+          value.alias
+          ? <LabeledToken
+              key={index}
+              index={index}
+              token={value}
+              selected={index === this.state.selectedToken}
+              onTokenExtendRight={this.onTokenExtendRight}
+              onTokenExtendLeft={this.onTokenExtendLeft}
+              onDeSelect={() => this.setState({ selectedToken: null })}
+              onSelect={this.onTokenClick} />
+          : <UnlabeledToken
+              key={index}
+              index={index}
+              token={value}
+              onClick={() => this.setState({ selectedToken: null })}
+              onSelect={this.onUnlabeledTextSelect} />
+        )}
       </div>
     )
   }

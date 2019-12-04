@@ -6,6 +6,7 @@ interface Props {
   token: SentenceToken
   index: number
   onSelect: (token: SentenceToken, index: number, start: number, end: number) => void
+  onClick: () => void
 }
 
 export default class UnlabeledToken extends React.Component<Props, {}> {
@@ -42,9 +43,9 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
   }
 
   render() {
-    const { token, index } = this.props
+    const { token, index, onClick } = this.props
     return (
-      <span onMouseDown={this.onMouseDown}>
+      <span onMouseDown={this.onMouseDown} onClick={onClick}>
         <span></span>
         {token.text}
         <span></span>
