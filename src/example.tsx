@@ -25,7 +25,7 @@ const sentence = {
       userDefined: false
     },
     {
-      text: 'Boss',
+      text: 'pete',
       alias: 'nick-name',
       meta: '@nick-name',
       userDefined: true
