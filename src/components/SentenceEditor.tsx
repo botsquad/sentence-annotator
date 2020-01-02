@@ -5,19 +5,18 @@ import LabeledToken from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
 
 interface Props {
-  sentence: Sentence
+  value: Sentence
+  onChange: (s: Sentence) => void
 };
 
 interface State {
   selectedToken?: null | number;
-  sentence: Sentence
   contentDirty: boolean
 }
 
 export default class SentenceEditor extends React.Component<Props, State> {
   state: State = {
     selectedToken: null,
-    sentence: this.props.sentence,
     contentDirty: false,
   }
 
@@ -34,22 +33,23 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onTokenExtendRight = (_t: SentenceToken, index: number, delta: number) => {
-    const sentence = Sentence.extendRight(this.state.sentence, index, delta)
-    this.setState({ sentence })
+    const value = Sentence.extendRight(this.props.value, index, delta)
+    this.props.onChange(value)
   }
 
   onTokenExtendLeft = (_t: SentenceToken, index: number, delta: number) => {
-    const sentence = Sentence.extendLeft(this.state.sentence, index, delta)
+    const sentence = this.props.value
+    const value = Sentence.extendLeft(sentence, index, delta)
     if (typeof this.state.selectedToken === 'number' && this.state.selectedToken >= sentence.data.length) {
-      this.setState({ sentence, selectedToken: sentence.data.length - 1 })
-    } else {
-      this.setState({ sentence })
+      this.setState({ selectedToken: sentence.data.length - 1 })
     }
+    this.props.onChange(value)
   }
 
-  onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
-    const { sentence, newToken } = Sentence.splitSelectToken(this.state.sentence, index, start, end, { alias: "test" })
-    this.setState({ sentence, selectedToken: newToken })
+  onUnlabeledTextSelect = (t: SentenceToken, index: number, start: number, end: number) => {
+    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { alias: "test" })
+    this.setState({ selectedToken: newToken })
+    this.props.onChange(sentence)
   }
 
   div = React.createRef<HTMLDivElement>()
@@ -57,23 +57,24 @@ export default class SentenceEditor extends React.Component<Props, State> {
   syncEditableContent = () => {
     if (!this.div.current) return
     const spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
-    let sentence = this.state.sentence
+    let sentence = this.props.value
     spans.forEach((span, index) => {
       sentence = Sentence.setTokenText(sentence, index, span.innerText)
     })
-    this.setState({ sentence, contentDirty: false })
+    this.setState({ contentDirty: false })
+    this.props.onChange(sentence)
   }
 
   render() {
-    const { sentence } = this.state
-
     return (
-      <div className="sequence-editor"
+      <div className="sentence-editor--wrapper"
         contentEditable
+        spellCheck={false}
         suppressContentEditableWarning
         onInput={() => this.setState({ contentDirty: true })}
+        onBlur={this.syncEditableContent}
         ref={this.div}>
-        {sentence.data.map((value, index) =>
+        {this.props.value.data.map((value, index) =>
           value.alias
           ? <LabeledToken
               key={index}
@@ -88,7 +89,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
               key={index}
               index={index}
               token={value}
-              onClick={() => this.setState({ selectedToken: null })}
+              onClick={() => { this.setState({ selectedToken: null }); this.syncEditableContent(); }}
               onSelect={this.onUnlabeledTextSelect} />
         )}
       </div>

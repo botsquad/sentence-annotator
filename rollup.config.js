@@ -4,6 +4,13 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 import camelCase from 'lodash.camelcase'
 import typescript from 'rollup-plugin-typescript2'
 import json from 'rollup-plugin-json'
+import postcss from 'rollup-plugin-postcss'
+
+// PostCSS plugins
+import simplevars from 'postcss-simple-vars'
+import nested from 'postcss-nested'
+import cssnext from 'postcss-cssnext'
+import cssnano from 'cssnano'
 
 const pkg = require('./package.json')
 
@@ -21,12 +28,23 @@ export default {
     include: 'src/**',
   },
   plugins: [
+    postcss({
+      plugins: [
+        simplevars(),
+        nested(),
+        cssnext({ warnForDuplicates: false, }),
+        cssnano(),
+      ],
+      extensions: [ '.css' ],
+    }),
+
     // Allow json resolution
     json(),
+
     // Compile TypeScript files
     typescript({ useTsconfigDeclarationDir: true }),
-    // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
 
+    // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs({
       include: 'node_modules/**',
       namedExports:

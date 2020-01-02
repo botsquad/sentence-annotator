@@ -1,0 +1,50 @@
+.sentence-editor--wrapper {
+  outline: none;
+
+  span {
+    display: inline-block;
+    position: relative;
+    .meta {
+      background: #ff99ff;
+      line-height: 1.2;
+    }
+    .selected {
+      background: yellow;
+    }
+
+    .meta .mouse-prevent {
+      position: absolute;
+      top: -10px; bottom: -10px; left: -10px; right: -10px;
+    }
+
+    .handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #6666FF;
+
+      div.dot {
+        position: absolute;
+        width: 10px; height: 10px;
+        background: #6666FF;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      &.left {
+        left: -2px;
+      }
+      &.right {
+        right: -2px;
+      }
+      &.left div.dot {
+        right: -4px;
+        top: -7px;
+      }
+      &.right div.dot {
+        left: -4px;
+        bottom: -9px;
+      }
+    }
+  }
+}

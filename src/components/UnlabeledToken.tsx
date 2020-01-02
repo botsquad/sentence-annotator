@@ -1,5 +1,4 @@
 import * as React from "react"
-import { findDOMNode } from "react-dom"
 import { SentenceToken } from '../lib/annotator'
 
 interface Props {
@@ -11,12 +10,14 @@ interface Props {
 
 export default class UnlabeledToken extends React.Component<Props, {}> {
 
+  span = React.createRef<HTMLSpanElement>()
+
   state = {
     selectedText: ''
   }
 
   selectionChange = () => {
-    const node = findDOMNode(this)
+    const node = this.span.current
     const selection = window.getSelection()
 
     if (selection?.anchorNode?.parentElement === node && selection?.focusNode?.parentElement === node) {
@@ -30,7 +31,9 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
       return
     }
     const pos = this.props.token.text.search(new RegExp(this.state.selectedText))
-    this.props.onSelect(this.props.token, this.props.index, pos, pos + this.state.selectedText.length)
+    if (pos >= 0) {
+      this.props.onSelect(this.props.token, this.props.index, pos, pos + this.state.selectedText.length)
+    }
   }
 
   mouseUp = () => {
@@ -46,6 +49,7 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
     const { token, onClick } = this.props
     return (
       <span
+        ref={this.span}
         onMouseDown={this.onMouseDown}
         onClick={onClick}>
         <span></span>

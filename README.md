@@ -13,7 +13,7 @@ as a React component.
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import SentenceEditor from '@botsquad/sentence-editor;
+import SentenceEditor from '@botsquad/sentence-annotator';
 
 const sentence = {
   id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',

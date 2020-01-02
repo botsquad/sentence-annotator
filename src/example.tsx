@@ -36,7 +36,7 @@ const sentence = {
 ReactDOM.render(
   <div>
     <h1>SentenceEditor component</h1>
-    <SentenceEditor sentence={sentence} />
+    <SentenceEditor value={sentence} />
   </div>,
   document.getElementById("root")
 );
