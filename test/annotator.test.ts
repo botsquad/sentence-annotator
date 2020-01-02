@@ -28,7 +28,11 @@ const sentence = {
   count: 1,
   updated: 0
 };
+
 const texts = (s: Sentence) => s.data.map(({ text }) => text);
+const userDefineds = (s: Sentence) => s.data.map(({ userDefined }) => userDefined);
+
+let s: Sentence
 
 describe('Sentence', () => {
   it('sentence toString', () => {
@@ -36,7 +40,7 @@ describe('Sentence', () => {
   });
 
   it('token extendRight', () => {
-    let s
+
     // move
     s = Sentence.extendRight(sentence, 0, 2);
     expect(texts(s)).toEqual(['remember that my ni', 'ckname', ' is ', 'Boss']);
@@ -72,7 +76,6 @@ describe('Sentence', () => {
   });
 
   it('token extendLeft', () => {
-    let s
     // move
     s = Sentence.extendLeft(sentence, 1, 2);
     expect(texts(s)).toEqual(['remember that m', 'y nickname', ' is ', 'Boss']);
@@ -91,7 +94,6 @@ describe('Sentence', () => {
   });
 
   it('token split', () => {
-    let s
     s = Sentence.splitToken(sentence, 0, 2);
     expect(texts(s)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
 
@@ -100,32 +102,27 @@ describe('Sentence', () => {
   });
 
   it('token update', () => {
-    let s
     s = Sentence.updateToken(sentence, 3, { text: 'Johnny' });
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ', 'Johnny']);
   });
 
   it('token insert', () => {
-    let s
     s = Sentence.insertToken(sentence, 3, { text: 'Johnny' });
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ', 'Johnny', 'Boss']);
   });
 
   it('token delete', () => {
-    let s
     s = Sentence.deleteToken(sentence, 3);
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ']);
   });
 
   it('token neutralize', () => {
-    let s
     s = Sentence.neutralizeToken(sentence, 3);
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is Boss']);
   });
 
   it('token select split', () => {
-
-    let s
+    let s: { sentence: Sentence, newToken: number }
     s = Sentence.splitSelectToken(sentence, 0, 9, 13);
     expect(texts(s.sentence)).toEqual(['remember ', 'that', ' my ', 'nickname', ' is ', 'Boss']);
     expect(s.newToken).toEqual(1)
@@ -146,11 +143,13 @@ describe('Sentence', () => {
       data: [
         {
           alias: 'first',
-          text: 'Aap'
+          text: 'Aap',
+          userDefined: true
         },
         {
           alias: 'first',
-          text: ' Noot'
+          text: ' Noot',
+          userDefined: true
         },
       ],
       isTemplate: false,
@@ -158,10 +157,9 @@ describe('Sentence', () => {
       updated: 0
     };
 
-    let s
     s = Sentence.extendLeft(sentence, 1, -1);
     expect(texts(s)).toEqual(['Aap', ' ', 'Noot']);
-
+    expect(userDefineds(s)).toEqual([true, false, true]);
   });
 
 });
