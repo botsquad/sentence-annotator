@@ -1,8 +1,11 @@
 # Sentence Annotator component
 
-This is a component for creating a text input box which understands Dialogflow's *user utterance*
-JSON format, and allows one to use an interface similar to Dialogflow's utterance editor as a React
-component.
+[![Build Status](https://travis-ci.org/botsquad/sentence-annotator.svg?branch=master)](https://travis-ci.org/botsquad/sentence-annotator)
+[![npm (scoped)](https://img.shields.io/npm/v/@botsquad/sentence-annotator)](https://www.npmjs.com/package/@botsquad/sentence-annotator)
+
+This is a React component for creating a text input box which understands Dialogflow's *user
+utterance* JSON format, and allows one to use an interface similar to Dialogflow's utterance editor
+as a React component.
 
 ## Example code
 
