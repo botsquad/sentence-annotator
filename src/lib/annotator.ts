@@ -1,4 +1,5 @@
-import { cloneDeep, defaults } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import defaults from 'lodash/defaults'
 
 export interface SentenceToken {
   text: string;
@@ -20,7 +21,7 @@ function strSplit(s: string, i: number) {
 
 export class Sentence {
   static setTokenText(s: Sentence, index: number, text: string) {
-    s = <Sentence>cloneDeep(s)
+    s = cloneDeep(s)
     s.data[index].text = text
     return s
   }
@@ -29,10 +30,10 @@ export class Sentence {
     return s.data.map(({ text }) => text).join('');
   }
   static extendRight(s: Sentence, token: number, delta: number): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
 
     if (delta < 0) {
-      if (token == s.data.length -1 || s.data[token + 1].alias) {
+      if (token === s.data.length -1 || s.data[token + 1].alias) {
         const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
         s.data.push({ userDefined: false, text: right })
@@ -45,7 +46,7 @@ export class Sentence {
     let curToken = token + 1
     let curDelta = delta
     while (true) {
-      if (curToken == s.data.length) {
+      if (curToken === s.data.length) {
         // cannot extend further
         break
       }
@@ -66,10 +67,10 @@ export class Sentence {
   }
 
   static extendLeft(s: Sentence, token: number, delta: number): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
 
     if (delta < 0) {
-      if (token == 0 || s.data[token -1].alias) {
+      if (token === 0 || s.data[token -1].alias) {
         // left border or aliased neighbour; do not extend left but create new token
         const [ left, right ] = strSplit(s.data[token].text, - delta)
         s.data[token].text = right
@@ -107,7 +108,7 @@ export class Sentence {
   }
 
   static splitToken(s: Sentence, token: number, index: number): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
     if (token < 0 || token > s.data.length - 1 || index >= s.data[token].text.length) {
       return s
     }
@@ -120,25 +121,25 @@ export class Sentence {
   }
 
   static updateToken(s: Sentence, token: number, data: SentenceToken): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
     s.data[token] = defaults(data, s.data[token])
     return s
   }
 
   static insertToken(s: Sentence, token: number, data: SentenceToken): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
     s.data.splice(token, 0, data);
     return s
   }
 
   static deleteToken(s: Sentence, token: number): Sentence {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
     s.data.splice(token, 1);
     return s
   }
 
   static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object) {
-    s = <Sentence>cloneDeep(s);
+    s = cloneDeep(s);
 
     const tokenData = s.data[token]
     s.data.splice(token, 1)

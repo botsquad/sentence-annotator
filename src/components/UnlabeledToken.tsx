@@ -1,5 +1,5 @@
-import * as React from "react"
-import { findDOMNode} from "react-dom"
+import React from "react"
+import ReactDOM from "react-dom"
 import { SentenceToken } from '../lib/annotator'
 
 interface Props {
@@ -16,10 +16,10 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
   }
 
   selectionChange = () => {
-    const node = findDOMNode(this)
+    const node = ReactDOM.findDOMNode(this)
     const selection = window.getSelection()
 
-    if (selection?.anchorNode && selection.anchorNode.parentElement == node && selection.focusNode && selection.focusNode.parentElement == node) {
+    if (selection?.anchorNode?.parentElement === node && selection?.focusNode?.parentElement === node) {
       const selectedText = selection.toString()
       this.setState({ selectedText })
     }
