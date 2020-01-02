@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { SentenceToken } from '../lib/annotator'
 import { Popover, Position } from '@blueprintjs/core'
-
+import LabeledTokenPopover from './LabeledTokenPopover'
 
 interface Props {
   token: SentenceToken
@@ -12,6 +12,7 @@ interface Props {
   onTokenExtendRight: (token: SentenceToken, index: number, delta: number) => void
   onTokenExtendLeft: (token: SentenceToken, index: number, delta: number) => void
   onSelect: (token: SentenceToken, index: number) => void
+  onRemove: (token: SentenceToken, index: number) => void
   onDeSelect: () => void
 }
 
@@ -94,7 +95,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   render() {
-    const { token, index, selected, onSelect } = this.props
+    const { token, index, selected, onSelect, onRemove } = this.props
     return (
       <Popover isOpen={selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
@@ -106,7 +107,7 @@ export default class Token extends React.Component<Props, State> {
           {token.text}
           <span></span>
         </span>
-        <div>Lalalal this is a div bla</div>
+        <LabeledTokenPopover onTokenRemove={() => onRemove(token, index)} />
       </Popover>
     )
   }

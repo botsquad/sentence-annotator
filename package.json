@@ -71,7 +71,10 @@
     },
     "collectCoverageFrom": [
       "src/*.{js,ts,tsx}"
-    ]
+    ],
+    "moduleNameMapper":{
+      "\\.(css|less|sass|scss)$": "../test/__mock__.js"
+    }
   },
   "prettier": {
     "semi": false,

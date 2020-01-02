@@ -48,3 +48,13 @@
     }
   }
 }
+
+.labeled-token--popover-wrapper {
+  padding: 12px;
+  font-size: 12px;
+
+  max-width: 200px;
+  .bp3-form-control {
+    margin-bottom: 12px;
+  }
+}

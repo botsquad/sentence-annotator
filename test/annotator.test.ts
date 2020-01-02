@@ -117,6 +117,12 @@ describe('Sentence', () => {
     expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is ']);
   });
 
+  it('token neutralize', () => {
+    let s
+    s = Sentence.neutralizeToken(sentence, 3);
+    expect(texts(s)).toEqual(['remember that my ', 'nickname', ' is Boss']);
+  });
+
   it('token select split', () => {
 
     let s

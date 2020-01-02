@@ -20,12 +20,18 @@ export default class SentenceEditor extends React.Component<Props, State> {
     contentDirty: false,
   }
 
+  onTokenNeutralize = (t: SentenceToken, index: number) => {
+    const value = Sentence.neutralizeToken(this.props.value, index)
+    this.props.onChange(value)
+    this.setState({ selectedToken: null  })
+  }
+
   onTokenClick = (t: SentenceToken, index: number) => {
     if (this.state.contentDirty) {
       this.syncEditableContent()
     }
 
-    if (t.alias) {
+    if (t.userDefined) {
       this.setState({ selectedToken: index })
     } else {
       this.setState({ selectedToken: null  })
@@ -46,10 +52,10 @@ export default class SentenceEditor extends React.Component<Props, State> {
     this.props.onChange(value)
   }
 
-  onUnlabeledTextSelect = (t: SentenceToken, index: number, start: number, end: number) => {
-    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { alias: "test" })
-    this.setState({ selectedToken: newToken })
+  onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
+    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { alias: "", meta: "" })
     this.props.onChange(sentence)
+    setTimeout(() => this.setState({ selectedToken: newToken }), 100)
   }
 
   div = React.createRef<HTMLDivElement>()
@@ -75,7 +81,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
         onBlur={this.syncEditableContent}
         ref={this.div}>
         {this.props.value.data.map((value, index) =>
-          value.alias
+          value.userDefined
           ? <LabeledToken
               key={index}
               index={index}
@@ -84,7 +90,9 @@ export default class SentenceEditor extends React.Component<Props, State> {
               onTokenExtendRight={this.onTokenExtendRight}
               onTokenExtendLeft={this.onTokenExtendLeft}
               onDeSelect={() => this.setState({ selectedToken: null })}
-              onSelect={this.onTokenClick} />
+              onSelect={this.onTokenClick}
+              onRemove={this.onTokenNeutralize}
+          />
           : <UnlabeledToken
               key={index}
               index={index}

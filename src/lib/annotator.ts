@@ -18,6 +18,29 @@ function strSplit(s: string, i: number) {
   return [ left, right ]
 }
 
+// collapses all sequential non user-defined tokens into one
+function collapseData(s: Sentence) {
+  const tokens = []
+  let index = 0
+  while (index < s.data.length) {
+    if (s.data[index].userDefined) {
+      tokens.push(s.data[index])
+      index++;
+    } else {
+      let text = s.data[index].text
+      index++;
+      while (index < s.data.length && !s.data[index].userDefined) {
+        text += s.data[index].text
+        index++;
+      }
+      tokens.push({ userDefined: false, text })
+    }
+  }
+  s.data = tokens
+  return s
+}
+
+
 export class Sentence {
   static setTokenText(s: Sentence, index: number, text: string) {
     s = _.cloneDeep(s)
@@ -32,7 +55,7 @@ export class Sentence {
     s = _.cloneDeep(s);
 
     if (delta < 0) {
-      if (token === s.data.length -1 || s.data[token + 1].alias) {
+      if (token === s.data.length -1 || s.data[token + 1].userDefined) {
         const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
         s.data.push({ userDefined: false, text: right })
@@ -69,7 +92,7 @@ export class Sentence {
     s = _.cloneDeep(s);
 
     if (delta < 0) {
-      if (token === 0 || s.data[token -1].alias) {
+      if (token === 0 || s.data[token -1].userDefined) {
         // left border or aliased neighbour; do not extend left but create new token
         const [ left, right ] = strSplit(s.data[token].text, - delta)
         s.data[token].text = right
@@ -137,6 +160,12 @@ export class Sentence {
     return s
   }
 
+  static neutralizeToken(s: Sentence, token: number): Sentence {
+    s = _.cloneDeep(s);
+    s.data[token] = { userDefined: false, text: s.data[token].text }
+    return collapseData(s)
+  }
+
   static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object) {
     s = _.cloneDeep(s);
 
@@ -155,7 +184,7 @@ export class Sentence {
 
     let [ main, remain ] = strSplit(rest, end - start)
     if (main.length) {
-      s.data.splice(token, 0, { ...tokenData, ...add, text: main })
+      s.data.splice(token, 0, { ...tokenData, ...add, userDefined: true, text: main })
       newToken = token
       token++
     }
