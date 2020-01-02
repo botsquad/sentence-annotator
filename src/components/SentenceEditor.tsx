@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Sentence } from '../lib/annotator'
+import { Sentence, SentenceToken } from '../lib/annotator'
 
 import LabeledToken from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
@@ -21,7 +21,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     contentDirty: false,
   }
 
-  onTokenClick = (t, index) => {
+  onTokenClick = (t: SentenceToken, index: number) => {
     if (this.state.contentDirty) {
       this.syncEditableContent()
     }
@@ -33,12 +33,12 @@ export default class SentenceEditor extends React.Component<Props, State> {
     }
   }
 
-  onTokenExtendRight = (t, index, delta) => {
+  onTokenExtendRight = (_t: SentenceToken, index: number, delta: number) => {
     const sentence = Sentence.extendRight(this.state.sentence, index, delta)
     this.setState({ sentence })
   }
 
-  onTokenExtendLeft = (t, index, delta) => {
+  onTokenExtendLeft = (_t: SentenceToken, index: number, delta: number) => {
     const sentence = Sentence.extendLeft(this.state.sentence, index, delta)
     if (this.state.selectedToken >= sentence.data.length) {
       this.setState({ sentence, selectedToken: sentence.data.length - 1 })
@@ -47,7 +47,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     }
   }
 
-  onUnlabeledTextSelect = (t, index, start, end) => {
+  onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
     const { sentence, newToken } = Sentence.splitSelectToken(this.state.sentence, index, start, end, { alias: "test" })
     this.setState({ sentence, selectedToken: newToken })
   }

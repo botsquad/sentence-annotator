@@ -1,5 +1,9 @@
 import * as React from "react"
+import classNames from 'classnames'
+
 import { SentenceToken } from '../lib/annotator'
+import { Popover, Position } from '@blueprintjs/core'
+
 
 interface Props {
   token: SentenceToken
@@ -23,11 +27,6 @@ export default class Token extends React.Component<Props, State> {
   state: State = {
     originX: 0,
     dragMode: DragMode.NONE
-  }
-
-  className() {
-    const { token, selected } = this.props
-    return 'meta' + (selected ? ' selected' : '')
   }
 
   mouseMove = (e: Event) => {
@@ -88,9 +87,8 @@ export default class Token extends React.Component<Props, State> {
     )
   }
 
-  onMouseOut = () => {
-    const { dragMode } = this.state
-    if (dragMode === DragMode.NONE) {
+  onPopoverInteraction = state => {
+    if (state === false) {
       this.props.onDeSelect()
     }
   }
@@ -98,16 +96,18 @@ export default class Token extends React.Component<Props, State> {
   render() {
     const { token, index, selected, onSelect } = this.props
     return (
-      <span
-        className={this.className()}
-        onMouseOver={() => onSelect(token, index)}
-        onMouseLeave={this.onMouseOut}>
-        {selected ? this.renderHandle(true) : null}
-        {selected ? this.renderHandle(false) : null}
-        <span></span>
-        {token.text}
-        <span></span>
-      </span>
+      <Popover isOpen={selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
+        <span
+          className={classNames('meta', { selected })}
+          onClick={() => onSelect(token, index)}>
+          {selected ? this.renderHandle(true) : null}
+          {selected ? this.renderHandle(false) : null}
+          <span></span>
+          {token.text}
+          <span></span>
+        </span>
+        <div>Lalalal this is a div bla</div>
+      </Popover>
     )
   }
 }

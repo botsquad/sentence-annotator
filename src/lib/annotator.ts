@@ -5,6 +5,7 @@ export interface SentenceToken {
   text: string;
   userDefined?: boolean;
   alias?: string;
+  meta?: string;
 }
 
 export interface Sentence {

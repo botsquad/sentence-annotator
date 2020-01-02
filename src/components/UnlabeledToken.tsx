@@ -15,7 +15,7 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
     selectedText: ''
   }
 
-  selectionChange = (e: Event) => {
+  selectionChange = () => {
     const node = findDOMNode(this)
     const selection = window.getSelection()
 
@@ -43,9 +43,11 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
   }
 
   render() {
-    const { token, index, onClick } = this.props
+    const { token, onClick } = this.props
     return (
-      <span onMouseDown={this.onMouseDown} onClick={onClick}>
+      <span
+        onMouseDown={this.onMouseDown}
+        onClick={onClick}>
         <span></span>
         {token.text}
         <span></span>
