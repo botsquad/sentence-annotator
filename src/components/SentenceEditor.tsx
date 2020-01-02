@@ -52,6 +52,11 @@ export default class SentenceEditor extends React.Component<Props, State> {
     this.props.onChange(value)
   }
 
+  onTokenChange = (token: SentenceToken, index: number) => {
+    const value = Sentence.changeToken(this.props.value, index, token)
+    this.props.onChange(value)
+  }
+
   onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
     const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { alias: "", meta: "" })
     this.props.onChange(sentence)
@@ -91,6 +96,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
               onTokenExtendLeft={this.onTokenExtendLeft}
               onDeSelect={() => this.setState({ selectedToken: null })}
               onSelect={this.onTokenClick}
+              onChange={this.onTokenChange}
               onRemove={this.onTokenNeutralize}
           />
           : <UnlabeledToken

@@ -13,6 +13,7 @@ interface Props {
   onTokenExtendLeft: (token: SentenceToken, index: number, delta: number) => void
   onSelect: (token: SentenceToken, index: number) => void
   onRemove: (token: SentenceToken, index: number) => void
+  onChange: (token: SentenceToken, index: number) => void
   onDeSelect: () => void
 }
 
@@ -95,7 +96,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   render() {
-    const { token, index, selected, onSelect, onRemove } = this.props
+    const { token, index, selected, onSelect, onRemove, onChange } = this.props
     return (
       <Popover isOpen={selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
@@ -107,7 +108,7 @@ export default class Token extends React.Component<Props, State> {
           {token.text}
           <span></span>
         </span>
-        <LabeledTokenPopover onTokenRemove={() => onRemove(token, index)} />
+        <LabeledTokenPopover onTokenRemove={() => onRemove(token, index)} token={token} onChange={token => onChange(token, index)} />
       </Popover>
     )
   }

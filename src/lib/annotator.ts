@@ -160,6 +160,12 @@ export class Sentence {
     return s
   }
 
+  static changeToken(s: Sentence, token: number, data: SentenceToken): Sentence {
+    s = _.cloneDeep(s);
+    s.data[token] = { ...s.data[token], ...data}
+    return s
+  }
+
   static neutralizeToken(s: Sentence, token: number): Sentence {
     s = _.cloneDeep(s);
     s.data[token] = { userDefined: false, text: s.data[token].text }
