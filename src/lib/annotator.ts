@@ -1,5 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep';
-import defaults from 'lodash/defaults';
+import { cloneDeep, defaults } from 'lodash'
 
 export interface SentenceToken {
   text: string;

@@ -60,7 +60,7 @@ export default class Token extends React.Component<Props, State> {
     }
   }
 
-  mouseUp = (e: Event) => {
+  mouseUp = (_e: Event) => {
     this.setState({ dragMode: DragMode.NONE })
     document.body.removeEventListener("mousemove", this.mouseMove)
     document.body.removeEventListener("mouseup", this.mouseUp)
@@ -87,7 +87,7 @@ export default class Token extends React.Component<Props, State> {
     )
   }
 
-  onPopoverInteraction = state => {
+  onPopoverInteraction = (state: boolean) => {
     if (state === false) {
       this.props.onDeSelect()
     }

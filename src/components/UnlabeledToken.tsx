@@ -19,7 +19,7 @@ export default class UnlabeledToken extends React.Component<Props, {}> {
     const node = findDOMNode(this)
     const selection = window.getSelection()
 
-    if (selection.anchorNode && selection.anchorNode.parentElement == node && selection.focusNode && selection.focusNode.parentElement == node) {
+    if (selection?.anchorNode && selection.anchorNode.parentElement == node && selection.focusNode && selection.focusNode.parentElement == node) {
       const selectedText = selection.toString()
       this.setState({ selectedText })
     }

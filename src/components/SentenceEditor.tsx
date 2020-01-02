@@ -9,7 +9,7 @@ interface Props {
 };
 
 interface State {
-  selectedToken?: number;
+  selectedToken?: null | number;
   sentence: Sentence
   contentDirty: boolean
 }
@@ -40,7 +40,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
   onTokenExtendLeft = (_t: SentenceToken, index: number, delta: number) => {
     const sentence = Sentence.extendLeft(this.state.sentence, index, delta)
-    if (this.state.selectedToken >= sentence.data.length) {
+    if (typeof this.state.selectedToken === 'number' && this.state.selectedToken >= sentence.data.length) {
       this.setState({ sentence, selectedToken: sentence.data.length - 1 })
     } else {
       this.setState({ sentence })
@@ -55,6 +55,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
   div = React.createRef<HTMLDivElement>()
 
   syncEditableContent = () => {
+    if (!this.div.current) return
     const spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
     let sentence = this.state.sentence
     spans.forEach((span, index) => {
