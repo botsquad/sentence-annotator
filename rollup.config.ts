@@ -26,7 +26,33 @@ export default {
     // Compile TypeScript files
     typescript({ useTsconfigDeclarationDir: true }),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
-    commonjs(),
+
+    commonjs({
+      include: 'node_modules/**',
+      namedExports:
+      {
+        './node_modules/react/index.js':
+        [
+          'React',
+          'cloneElement',
+          'createElement',
+          'isValidElement',
+          'PropTypes',
+          'Children',
+          'Component',
+          'PureComponent',
+        ],
+        './node_modules/react-dom/index.js':
+        [
+          'render',
+          'findDOMNode',
+          'createPortal',
+          'unstable_renderSubtreeIntoContainer',
+          'unmountComponentAtNode',
+        ],
+      }
+    }),
+
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
