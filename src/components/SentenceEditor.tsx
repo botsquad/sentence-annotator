@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 import { Sentence, SentenceToken } from '../lib/annotator'
 
 import LabeledToken from './LabeledToken'

@@ -1,5 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
-import defaults from 'lodash/defaults'
+import * as _ from 'lodash'
 
 export interface SentenceToken {
   text: string;
@@ -21,7 +20,7 @@ function strSplit(s: string, i: number) {
 
 export class Sentence {
   static setTokenText(s: Sentence, index: number, text: string) {
-    s = cloneDeep(s)
+    s = _.cloneDeep(s)
     s.data[index].text = text
     return s
   }
@@ -30,7 +29,7 @@ export class Sentence {
     return s.data.map(({ text }) => text).join('');
   }
   static extendRight(s: Sentence, token: number, delta: number): Sentence {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
 
     if (delta < 0) {
       if (token === s.data.length -1 || s.data[token + 1].alias) {
@@ -67,7 +66,7 @@ export class Sentence {
   }
 
   static extendLeft(s: Sentence, token: number, delta: number): Sentence {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
 
     if (delta < 0) {
       if (token === 0 || s.data[token -1].alias) {
@@ -108,7 +107,7 @@ export class Sentence {
   }
 
   static splitToken(s: Sentence, token: number, index: number): Sentence {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
     if (token < 0 || token > s.data.length - 1 || index >= s.data[token].text.length) {
       return s
     }
@@ -121,25 +120,25 @@ export class Sentence {
   }
 
   static updateToken(s: Sentence, token: number, data: SentenceToken): Sentence {
-    s = cloneDeep(s);
-    s.data[token] = defaults(data, s.data[token])
+    s = _.cloneDeep(s);
+    s.data[token] = _.defaults(data, s.data[token])
     return s
   }
 
   static insertToken(s: Sentence, token: number, data: SentenceToken): Sentence {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
     s.data.splice(token, 0, data);
     return s
   }
 
   static deleteToken(s: Sentence, token: number): Sentence {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
     s.data.splice(token, 1);
     return s
   }
 
   static splitSelectToken(s: Sentence, token: number, start: number, end: number, add?: object) {
-    s = cloneDeep(s);
+    s = _.cloneDeep(s);
 
     const tokenData = s.data[token]
     s.data.splice(token, 1)

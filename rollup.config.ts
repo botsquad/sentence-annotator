@@ -35,12 +35,18 @@ export default {
         [
           'React',
           'cloneElement',
+          'createRef',
           'createElement',
           'isValidElement',
           'PropTypes',
           'Children',
           'Component',
           'PureComponent',
+        ],
+        './node_modules/lodash/lodash.js':
+        [
+          'cloneDeep',
+          'defaults'
         ],
         './node_modules/react-dom/index.js':
         [
