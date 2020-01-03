@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Sentence, SentenceToken } from '../lib/annotator'
 
-import LabeledToken from './LabeledToken'
+import LabeledToken, { DragMode } from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
 
 interface Props {
@@ -12,15 +12,17 @@ interface Props {
 interface State {
   selectedToken?: null | number;
   contentDirty: boolean
+  dragMode: DragMode
 }
 
 export default class SentenceEditor extends React.Component<Props, State> {
   state: State = {
     selectedToken: null,
     contentDirty: false,
+    dragMode: DragMode.NONE
   }
 
-  onTokenNeutralize = (t: SentenceToken, index: number) => {
+  onTokenNeutralize = (_t: SentenceToken, index: number) => {
     const value = Sentence.neutralizeToken(this.props.value, index)
     this.props.onChange(value)
     this.setState({ selectedToken: null  })
@@ -39,16 +41,34 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onTokenExtendRight = (_t: SentenceToken, index: number, delta: number) => {
+    if (typeof this.state.selectedToken !== 'number') return
+
+    const sentence = this.props.value
     const value = Sentence.extendRight(this.props.value, index, delta)
+
+    if (value.data.length > sentence.data.length && delta > 0) {
+      this.setState({ selectedToken: this.state.selectedToken + 1 })
+    }
+    if (value.data.length < sentence.data.length && delta < 0) {
+      this.setState({ selectedToken: this.state.selectedToken - 1 })
+    }
+
     this.props.onChange(value)
   }
 
   onTokenExtendLeft = (_t: SentenceToken, index: number, delta: number) => {
+    if (typeof this.state.selectedToken !== 'number') return
+
     const sentence = this.props.value
     const value = Sentence.extendLeft(sentence, index, delta)
-    if (typeof this.state.selectedToken === 'number' && this.state.selectedToken >= sentence.data.length) {
-      this.setState({ selectedToken: sentence.data.length - 1 })
+
+    if (value.data.length > sentence.data.length && delta < 0) {
+      this.setState({ selectedToken: this.state.selectedToken + 1 })
     }
+    if (value.data.length < sentence.data.length && delta > 0) {
+      this.setState({ selectedToken: this.state.selectedToken - 1 })
+    }
+
     this.props.onChange(value)
   }
 
@@ -94,16 +114,20 @@ export default class SentenceEditor extends React.Component<Props, State> {
               selected={index === this.state.selectedToken}
               onTokenExtendRight={this.onTokenExtendRight}
               onTokenExtendLeft={this.onTokenExtendLeft}
-              onDeSelect={() => this.setState({ selectedToken: null })}
+              onDeSelect={() => {
+                this.setState({ selectedToken: null })
+              }}
               onSelect={this.onTokenClick}
               onChange={this.onTokenChange}
               onRemove={this.onTokenNeutralize}
+              dragMode={index === this.state.selectedToken ? this.state.dragMode : DragMode.NONE}
+              setDragMode={dragMode => this.setState({ dragMode })}
           />
           : <UnlabeledToken
               key={index}
               index={index}
               token={value}
-              onClick={() => { this.setState({ selectedToken: null }); this.syncEditableContent(); }}
+              onClick={() => { this.setState({ selectedToken: null }); this.syncEditableContent() }}
               onSelect={this.onUnlabeledTextSelect} />
         )}
       </div>

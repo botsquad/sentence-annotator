@@ -54,11 +54,16 @@ export class Sentence {
   static extendRight(s: Sentence, token: number, delta: number): Sentence {
     s = _.cloneDeep(s);
 
+    if (delta === 0) return s
+
     if (delta < 0) {
+      if (-delta >= s.data[token].text.length) {
+        return s
+      }
       if (token === s.data.length -1 || s.data[token + 1].userDefined) {
         const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
-        s.data.push({ userDefined: false, text: right })
+        s.data.splice(token + 1, 0, { userDefined: false, text: right })
         return s
       }
       return this.extendLeft(s, token + 1, -delta)
@@ -67,11 +72,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token + 1
     let curDelta = delta
-    while (true) {
-      if (curToken === s.data.length) {
-        // cannot extend further
-        break
-      }
+    while (curToken < s.data.length && s.data[token].userDefined != s.data[curToken].userDefined) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         s.data[token].text += s.data[curToken].text.substr(0, curDelta)
@@ -91,7 +92,12 @@ export class Sentence {
   static extendLeft(s: Sentence, token: number, delta: number): Sentence {
     s = _.cloneDeep(s);
 
+    if (delta === 0) return s
+
     if (delta < 0) {
+      if (-delta >= s.data[token].text.length) {
+        return s
+      }
       if (token === 0 || s.data[token -1].userDefined) {
         // left border or aliased neighbour; do not extend left but create new token
         const [ left, right ] = strSplit(s.data[token].text, - delta)
@@ -105,11 +111,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token - 1
     let curDelta = delta
-    while (true) {
-      if (curToken < 0) {
-        // cannot extend further
-        break
-      }
+    while (curToken >= 0 && s.data[token].userDefined != s.data[curToken].userDefined) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         let t = s.data[curToken].text

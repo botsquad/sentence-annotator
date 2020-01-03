@@ -29,6 +29,18 @@ const sentence = {
   updated: 0
 };
 
+const sentence2 = {
+  id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',
+  data: [
+    {
+      text: 'nickname',
+      alias: 'type',
+      meta: '@name-type',
+      userDefined: true
+    },
+  ]
+}
+
 const texts = (s: Sentence) => s.data.map(({ text }) => text);
 const userDefineds = (s: Sentence) => s.data.map(({ userDefined }) => userDefined);
 
@@ -42,20 +54,16 @@ describe('Sentence', () => {
   it('token extendRight', () => {
 
     // move
-    s = Sentence.extendRight(sentence, 0, 2);
-    expect(texts(s)).toEqual(['remember that my ni', 'ckname', ' is ', 'Boss']);
+    s = Sentence.extendRight(sentence, 1, 2);
+    expect(texts(s)).toEqual(['remember that my ', 'nickname i', 's ', 'Boss']);
 
-    // eat tokens
-    s = Sentence.extendRight(sentence, 0, 10);
-    expect(texts(s)).toEqual(['remember that my nickname i', 's ', 'Boss']);
+    // eat non-userdefined tokens
+    s = Sentence.extendRight(sentence, 1, 4);
+    expect(texts(s)).toEqual(['remember that my ', 'nickname is ', 'Boss']);
 
-    // eat tokens
-    s = Sentence.extendRight(sentence, 0, 12);
-    expect(texts(s)).toEqual(['remember that my nickname is ', 'Boss']);
-
-    // eat tokens
-    s = Sentence.extendRight(sentence, 0, 100000);
-    expect(texts(s)).toEqual(['remember that my nickname is Boss']);
+    // eat non-userdefined tokens
+    s = Sentence.extendRight(sentence, 1, 400);
+    expect(texts(s)).toEqual(['remember that my ', 'nickname is ', 'Boss']);
 
     // move nevative
     //s = Sentence.extendRight(sentence, 0, -2);
@@ -73,6 +81,9 @@ describe('Sentence', () => {
     s = Sentence.extendRight(sentence, 0, 8);
     expect(texts(s)).toEqual(['remember that my nickname', ' is ', 'Boss']);
 
+    // block when moving too far left
+    //s = Sentence.extendRight(sentence, 1, -100);
+    //expect(texts(s)).toEqual(['remember that my ', 'n', 'ickname is ', 'Boss']);
   });
 
   it('token extendLeft', () => {
@@ -91,6 +102,14 @@ describe('Sentence', () => {
     // move negative on last token creates new token
     s = Sentence.extendLeft(sentence, 0, -2);
     expect(texts(s)).toEqual(['re', 'member that my ', 'nickname', ' is ', 'Boss']);
+
+    // move negative on first token creates new token
+    s = Sentence.extendLeft(sentence2, 0, -2);
+    expect(texts(s)).toEqual(['ni', 'ckname']);
+
+    // block when moving too far right
+    //s = Sentence.extendLeft(sentence, 1, -100);
+    //expect(texts(s)).toEqual(['remember that my nicknam', 'e', ' is ', 'Boss']);
   });
 
   it('token split', () => {

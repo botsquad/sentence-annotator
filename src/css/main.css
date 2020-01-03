@@ -27,8 +27,9 @@
         position: absolute;
         width: 10px; height: 10px;
         background: #6666FF;
-        border-radius: 5px;
+        border-radius: 50%;
         cursor: pointer;
+        z-index: 10;
       }
 
       &.left {

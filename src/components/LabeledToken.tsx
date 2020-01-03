@@ -15,27 +15,27 @@ interface Props {
   onRemove: (token: SentenceToken, index: number) => void
   onChange: (token: SentenceToken, index: number) => void
   onDeSelect: () => void
+  dragMode: DragMode
+  setDragMode: (dragMode: DragMode) => void
 }
 
-enum DragMode { NONE, LEFT, RIGHT, MOVE }
+export enum DragMode { NONE, LEFT, RIGHT, MOVE }
 
 interface State {
   originX: number
-  dragMode: DragMode
 }
 
 export default class Token extends React.Component<Props, State> {
 
   state: State = {
     originX: 0,
-    dragMode: DragMode.NONE
   }
 
   mouseMove = (e: Event) => {
     const x = (e as MouseEvent).clientX
     const ox = this.state.originX
 
-    switch (this.state.dragMode) {
+    switch (this.props.dragMode) {
       case DragMode.LEFT:
         // extend left
         if (x - ox > 4) {
@@ -63,7 +63,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   mouseUp = (_e: Event) => {
-    this.setState({ dragMode: DragMode.NONE })
+    this.props.setDragMode(DragMode.NONE)
     document.body.removeEventListener("mousemove", this.mouseMove)
     document.body.removeEventListener("mouseup", this.mouseUp)
   }
@@ -73,8 +73,8 @@ export default class Token extends React.Component<Props, State> {
 
     this.setState({
       originX: e.clientX,
-      dragMode
     })
+    this.props.setDragMode(dragMode)
 
     document.body.addEventListener("mousemove", this.mouseMove)
     document.body.addEventListener("mouseup", this.mouseUp)
@@ -90,7 +90,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   onPopoverInteraction = (state: boolean) => {
-    if (state === false) {
+    if (this.props.dragMode === DragMode.NONE && state === false) {
       this.props.onDeSelect()
     }
   }
@@ -98,7 +98,7 @@ export default class Token extends React.Component<Props, State> {
   render() {
     const { token, index, selected, onSelect, onRemove, onChange } = this.props
     return (
-      <Popover isOpen={selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
+      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
           className={classNames('meta', { selected })}
           onClick={() => onSelect(token, index)}>
