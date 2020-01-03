@@ -25,6 +25,15 @@ interface State {
   originX: number
 }
 
+function aliasClass(alias: string) {
+  let sum = 0
+  for (let i=0; i<alias.length; i++) {
+    sum += alias.charCodeAt(i);
+  }
+  return 'alias-' + (sum % 10)
+}
+
+
 export default class Token extends React.Component<Props, State> {
 
   state: State = {
@@ -100,7 +109,7 @@ export default class Token extends React.Component<Props, State> {
     return (
       <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
-          className={classNames('meta', { selected })}
+          className={classNames('meta', { selected }, aliasClass(token.alias || 'alias'))}
           onClick={() => onSelect(token, index)}>
           {selected ? this.renderHandle(true) : null}
           {selected ? this.renderHandle(false) : null}
