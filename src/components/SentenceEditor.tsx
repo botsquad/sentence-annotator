@@ -108,7 +108,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
         {this.props.value.data.map((value, index) =>
           value.userDefined
           ? <LabeledToken
-              key={`${value.alias}${value.meta}`}
+              key={index === this.state.selectedToken && this.state.dragMode !== DragMode.NONE ? `${value.alias}${value.meta}` : index}
               index={index}
               token={value}
               selected={index === this.state.selectedToken}

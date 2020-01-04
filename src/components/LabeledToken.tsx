@@ -22,7 +22,7 @@ interface Props {
 export enum DragMode { NONE, LEFT, RIGHT, MOVE }
 
 interface State {
-  originX: number
+  originX: number | null
 }
 
 function metaClass(meta: string) {
@@ -37,15 +37,19 @@ function metaClass(meta: string) {
 export default class Token extends React.Component<Props, State> {
 
   state: State = {
-    originX: 0,
-    dragMode: DragMode.NONE
+    originX: null,
   }
 
   mouseMove = (e: Event) => {
     const x = (e as MouseEvent).clientX
     const ox = this.state.originX
 
-    switch (this.state.dragMode) {
+    if (ox === null) {
+      this.setState({ originX: x })
+      return
+    }
+
+    switch (this.props.dragMode) {
       case DragMode.LEFT:
         // extend left
         if (x - ox > 4) {
@@ -73,21 +77,26 @@ export default class Token extends React.Component<Props, State> {
   }
 
   mouseUp = (_e: Event) => {
-    this.setState({ dragMode: DragMode.NONE })
-    document.body.removeEventListener("mousemove", this.mouseMove)
-    document.body.removeEventListener("mouseup", this.mouseUp)
+    this.props.setDragMode(DragMode.NONE)
+  }
+
+  componentWillMount() {
+    if (this.props.dragMode !== DragMode.NONE) {
+      document.body.addEventListener("mousemove", this.mouseMove)
+      document.body.addEventListener("mouseup", this.mouseUp)
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.dragMode !== DragMode.NONE) {
+      document.body.removeEventListener("mousemove", this.mouseMove)
+      document.body.removeEventListener("mouseup", this.mouseUp)
+    }
   }
 
   dragStart(e: React.MouseEvent, dragMode: DragMode) {
     e.preventDefault()
-
-    this.setState({
-      originX: e.clientX,
-    })
-    this.setState({ dragMode })
-
-    document.body.addEventListener("mousemove", this.mouseMove)
-    document.body.addEventListener("mouseup", this.mouseUp)
+    this.props.setDragMode(dragMode)
   }
 
   renderHandle(left: boolean) {
@@ -100,7 +109,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   onPopoverInteraction = (state: boolean) => {
-    if (this.state.dragMode === DragMode.NONE && state === false) {
+    if (this.props.dragMode === DragMode.NONE && state === false) {
       this.props.onDeSelect()
     }
   }
@@ -110,7 +119,7 @@ export default class Token extends React.Component<Props, State> {
     return (
       <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
-          className={classNames('meta', { selected }, aliasClass(token.alias || 'alias'))}
+          className={classNames('meta', { selected }, metaClass(token.alias || 'alias'))}
           onClick={() => onSelect(token, index)}>
           {selected ? this.renderHandle(true) : null}
           {selected ? this.renderHandle(false) : null}
