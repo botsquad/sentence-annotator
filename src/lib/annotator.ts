@@ -72,7 +72,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token + 1
     let curDelta = delta
-    while (curToken < s.data.length && s.data[token].userDefined != s.data[curToken].userDefined) {
+    while (curToken < s.data.length && s.data[token].userDefined !== s.data[curToken].userDefined) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         s.data[token].text += s.data[curToken].text.substr(0, curDelta)
@@ -111,7 +111,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token - 1
     let curDelta = delta
-    while (curToken >= 0 && s.data[token].userDefined != s.data[curToken].userDefined) {
+    while (curToken >= 0 && s.data[token].userDefined !== s.data[curToken].userDefined) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         let t = s.data[curToken].text

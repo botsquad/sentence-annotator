@@ -73,7 +73,7 @@
       "src/*.{js,ts,tsx}"
     ],
     "moduleNameMapper":{
-      "\\.(css|less|sass|scss)$": "../test/__mock__.js"
+      "\\.(css|less|sass|scss)$": "../test/__mock__.ts"
     }
   },
   "prettier": {
