@@ -1,3 +1,14 @@
+$bg0: #A5FEFA;
+$bg1: #A8CFFF;
+$bg2: #CAFEB8;
+$bg3: #93EEAA;
+$bg4: #FFA4FF;
+$bg5: #CD85FE;
+$bg6: #FFA8A8;
+$bg7: #52FF20;
+$bg8: #DFDF00;
+$bg9: #8ADCFF;
+
 .sentence-editor--wrapper {
   outline: none;
 
@@ -5,11 +16,20 @@
     display: inline-block;
     position: relative;
     .meta {
-      background: #ff99ff;
       line-height: 1.2;
+      &.m0 { background: $bg0; }
+      &.m1 { background: $bg1; }
+      &.m2 { background: $bg2; }
+      &.m3 { background: $bg3; }
+      &.m4 { background: $bg4; }
+      &.m5 { background: $bg5; }
+      &.m6 { background: $bg6; }
+      &.m7 { background: $bg7; }
+      &.m8 { background: $bg8; }
+      &.m9 { background: $bg9; }
     }
     .selected {
-      background: yellow;
+      /* background: yellow; */
     }
 
     .meta .mouse-prevent {

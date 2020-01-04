@@ -25,12 +25,12 @@ interface State {
   originX: number
 }
 
-function aliasClass(alias: string) {
+function metaClass(meta: string) {
   let sum = 0
-  for (let i=0; i<alias.length; i++) {
-    sum += alias.charCodeAt(i);
+  for (let i=0; i<meta.length; i++) {
+    sum += meta.charCodeAt(i);
   }
-  return 'alias-' + (sum % 10)
+  return 'm' + (sum % 10)
 }
 
 
@@ -38,13 +38,14 @@ export default class Token extends React.Component<Props, State> {
 
   state: State = {
     originX: 0,
+    dragMode: DragMode.NONE
   }
 
   mouseMove = (e: Event) => {
     const x = (e as MouseEvent).clientX
     const ox = this.state.originX
 
-    switch (this.props.dragMode) {
+    switch (this.state.dragMode) {
       case DragMode.LEFT:
         // extend left
         if (x - ox > 4) {
@@ -72,7 +73,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   mouseUp = (_e: Event) => {
-    this.props.setDragMode(DragMode.NONE)
+    this.setState({ dragMode: DragMode.NONE })
     document.body.removeEventListener("mousemove", this.mouseMove)
     document.body.removeEventListener("mouseup", this.mouseUp)
   }
@@ -83,7 +84,7 @@ export default class Token extends React.Component<Props, State> {
     this.setState({
       originX: e.clientX,
     })
-    this.props.setDragMode(dragMode)
+    this.setState({ dragMode })
 
     document.body.addEventListener("mousemove", this.mouseMove)
     document.body.addEventListener("mouseup", this.mouseUp)
@@ -99,7 +100,7 @@ export default class Token extends React.Component<Props, State> {
   }
 
   onPopoverInteraction = (state: boolean) => {
-    if (this.props.dragMode === DragMode.NONE && state === false) {
+    if (this.state.dragMode === DragMode.NONE && state === false) {
       this.props.onDeSelect()
     }
   }
