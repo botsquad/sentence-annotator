@@ -1,6 +1,6 @@
 {
   "name": "@botsquad/sentence-annotator",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Typescript React component to annotate (label) sentences",
   "keywords": [],
   "main": "dist/sentence-annotator.umd.js",
