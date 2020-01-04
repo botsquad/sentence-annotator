@@ -119,7 +119,7 @@ export default class Token extends React.Component<Props, State> {
     return (
       <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
-          className={classNames('meta', { selected }, metaClass(token.alias || 'alias'))}
+          className={classNames('meta', { selected }, metaClass(token.meta || 'meta'))}
           onClick={() => onSelect(token, index)}>
           {selected ? this.renderHandle(true) : null}
           {selected ? this.renderHandle(false) : null}
