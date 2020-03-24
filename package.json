@@ -130,11 +130,13 @@
     "typedoc": "^0.15.6",
     "typescript": "^3.7.4"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@blueprintjs/core": "^3.22.3",
-    "classnames": "^2.2.6",
-    "lodash": "^4.17.15",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "lodash": "^4.17.15"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6"
   }
 }

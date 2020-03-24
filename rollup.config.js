@@ -23,7 +23,7 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', '@blueprintjs/core', 'lodash'],
   watch: {
     include: 'src/**',
   },
