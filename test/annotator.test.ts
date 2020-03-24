@@ -5,23 +5,19 @@ const sentence = {
   data: [
     {
       text: 'remember that my ',
-      userDefined: false
     },
     {
       text: 'nickname',
-      alias: 'type',
-      meta: '@name-type',
-      userDefined: true
+      name: 'type',
+      entity: '@name-type',
     },
     {
       text: ' is ',
-      userDefined: false
     },
     {
       text: 'Boss',
-      alias: 'nick-name',
-      meta: '@nick-name',
-      userDefined: true
+      name: 'nick-name',
+      entity: '@nick-name',
     }
   ],
   isTemplate: false,
@@ -34,15 +30,14 @@ const sentence2 = {
   data: [
     {
       text: 'nickname',
-      alias: 'type',
-      meta: '@name-type',
-      userDefined: true
+      name: 'type',
+      entity: '@name-type',
     },
   ]
 }
 
 const texts = (s: Sentence) => s.data.map(({ text }) => text);
-const userDefineds = (s: Sentence) => s.data.map(({ userDefined }) => userDefined);
+const userDefineds = (s: Sentence) => s.data.map(s => !!s.entity);
 
 let s: Sentence
 
@@ -161,14 +156,12 @@ describe('Sentence', () => {
       id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',
       data: [
         {
-          alias: 'first',
+          name: 'first',
           text: 'Aap',
-          userDefined: true
         },
         {
-          alias: 'first',
+          name: 'first',
           text: ' Noot',
-          userDefined: true
         },
       ],
       isTemplate: false,

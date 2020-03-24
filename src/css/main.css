@@ -1,19 +1,19 @@
-$bg0: #A5FEFA;
-$bg1: #A8CFFF;
-$bg2: #CAFEB8;
-$bg3: #93EEAA;
-$bg4: #FFA4FF;
-$bg5: #CD85FE;
-$bg6: #FFA8A8;
-$bg7: #52FF20;
-$bg8: #DFDF00;
-$bg9: #8ADCFF;
+$bg0: rgba(100,255,100,0.3);
+$bg1: rgba(255,255,100,0.3);
+$bg2: rgba(0,255,0,0.3);
+$bg3: rgba(0,100,255,0.3);
+$bg4: rgba(100,100,0,0.3);
+$bg5: rgba(255,0,100,0.3);
+$bg6: rgba(0,100,255,0.3);
+$bg7: rgba(100,0,255,0.3);
+$bg8: rgba(255,0,255,0.3);
+$bg9: rgba(255,100,100,0.3);
 
 .sentence-editor--wrapper {
   outline: none;
 
   span {
-    display: inline-block;
+    display: inline;
     position: relative;
     .meta {
       line-height: 1.2;

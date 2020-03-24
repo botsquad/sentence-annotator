@@ -12,11 +12,11 @@ export default class extends React.Component<Props, {}> {
   onChange(e: React.ChangeEvent<HTMLInputElement>, target: string) {
     let token = { ...this.props.token }
     switch (target) {
-      case 'alias':
-        token.alias = e.target.value
+      case 'name':
+        token.name = e.target.value
         break
-      case 'meta':
-        token.meta = e.target.value
+      case 'entity':
+        token.entity = e.target.value
         break
     }
     this.props.onChange(token)
@@ -28,31 +28,24 @@ export default class extends React.Component<Props, {}> {
     return (
       <div className="labeled-token--popover-wrapper">
 
-        <FormGroup
-          label="Alias"
-          labelFor="text-input"
-          labelInfo="(required)"
-        >
+        <FormGroup label="Entity" labelFor="text-input">
           <input
+            autoFocus
             className="bp3-input"
-            id="alias-input"
-            placeholder="Alias name"
-            value={token.alias}
-            onChange={e => this.onChange(e, 'alias')}
+            id="meta-input"
+            placeholder="sys.any"
+            value={token.entity}
+            onChange={e => this.onChange(e, 'entity')}
           />
         </FormGroup>
 
-        <FormGroup
-          label="Metadata"
-          labelFor="text-input"
-          labelInfo="(required)"
-        >
+        <FormGroup label="Name" labelFor="text-input">
           <input
             className="bp3-input"
-            id="meta-input"
-            placeholder="@sys.any"
-            value={token.meta}
-            onChange={e => this.onChange(e, 'meta')}
+            id="name-input"
+            placeholder="Name"
+            value={token.name}
+            onChange={e => this.onChange(e, 'name')}
           />
         </FormGroup>
 

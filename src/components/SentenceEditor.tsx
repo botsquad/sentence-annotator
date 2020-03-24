@@ -7,6 +7,7 @@ import UnlabeledToken from './UnlabeledToken'
 interface Props {
   value: Sentence
   onChange: (s: Sentence) => void
+  onReload: (s: Sentence) => void
 };
 
 interface State {
@@ -25,7 +26,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
   onTokenNeutralize = (_t: SentenceToken, index: number) => {
     const value = Sentence.neutralizeToken(this.props.value, index)
     this.props.onChange(value)
-    this.setState({ selectedToken: null  })
+    this.setState({ selectedToken: null })
   }
 
   onTokenClick = (t: SentenceToken, index: number) => {
@@ -33,10 +34,10 @@ export default class SentenceEditor extends React.Component<Props, State> {
       this.syncEditableContent()
     }
 
-    if (t.userDefined) {
+    if (t.entity !== undefined) {
       this.setState({ selectedToken: index })
     } else {
-      this.setState({ selectedToken: null  })
+      this.setState({ selectedToken: null })
     }
   }
 
@@ -78,7 +79,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
-    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { alias: "", meta: "" })
+    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { name: "", entity: "" })
     this.props.onChange(sentence)
     setTimeout(() => this.setState({ selectedToken: newToken }), 100)
   }
@@ -88,10 +89,23 @@ export default class SentenceEditor extends React.Component<Props, State> {
   syncEditableContent = () => {
     if (!this.div.current) return
     const spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
+    const text = this.div.current.innerText
+    if (!spans.length) {
+      let sentence = { ...this.props.value, data: [{ text }] }
+      this.props.onReload(sentence)
+      return
+    }
+
     let sentence = this.props.value
     spans.forEach((span, index) => {
       sentence = Sentence.setTokenText(sentence, index, span.innerText)
     })
+    if (spans.length !== sentence.data.length) {
+      sentence = { ...sentence, data: sentence.data.slice(0, spans.length) }
+      this.props.onReload(sentence)
+      return
+    }
+
     this.setState({ contentDirty: false })
     this.props.onChange(sentence)
   }
@@ -102,13 +116,18 @@ export default class SentenceEditor extends React.Component<Props, State> {
         contentEditable
         spellCheck={false}
         suppressContentEditableWarning
+        onKeyDown={e => {
+          if (e.keyCode === 13) {
+            e.preventDefault()
+          }
+        }}
         onInput={() => this.setState({ contentDirty: true })}
         onBlur={this.syncEditableContent}
         ref={this.div}>
         {this.props.value.data.map((value, index) =>
-          value.userDefined
-          ? <LabeledToken
-              key={index === this.state.selectedToken && this.state.dragMode !== DragMode.NONE ? `${value.alias}${value.meta}` : index}
+          value.entity !== undefined
+            ? <LabeledToken
+              key={index === this.state.selectedToken && this.state.dragMode !== DragMode.NONE ? `${value.name}${value.entity}` : index}
               index={index}
               token={value}
               selected={index === this.state.selectedToken}
@@ -122,8 +141,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
               onRemove={this.onTokenNeutralize}
               dragMode={index === this.state.selectedToken ? this.state.dragMode : DragMode.NONE}
               setDragMode={dragMode => this.setState({ dragMode })}
-          />
-          : <UnlabeledToken
+            />
+            : <UnlabeledToken
               key={index}
               index={index}
               token={value}

@@ -27,7 +27,7 @@ interface State {
 
 function metaClass(meta: string) {
   let sum = 0
-  for (let i=0; i<meta.length; i++) {
+  for (let i = 0; i < meta.length; i++) {
     sum += meta.charCodeAt(i);
   }
   return 'm' + (sum % 10)
@@ -109,8 +109,13 @@ export default class Token extends React.Component<Props, State> {
   }
 
   onPopoverInteraction = (state: boolean) => {
-    if (this.props.dragMode === DragMode.NONE && state === false) {
-      this.props.onDeSelect()
+    const { token, index, onRemove, onDeSelect, dragMode } = this.props
+
+    if (dragMode === DragMode.NONE && state === false) {
+      if (!token.entity?.length) {
+        onRemove(token, index)
+      }
+      onDeSelect()
     }
   }
 
@@ -119,7 +124,7 @@ export default class Token extends React.Component<Props, State> {
     return (
       <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
         <span
-          className={classNames('meta', { selected }, metaClass(token.meta || 'meta'))}
+          className={classNames('meta', { selected }, metaClass(token.entity || 'meta'))}
           onClick={() => onSelect(token, index)}>
           {selected ? this.renderHandle(true) : null}
           {selected ? this.renderHandle(false) : null}

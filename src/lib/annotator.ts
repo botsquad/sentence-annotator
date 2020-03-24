@@ -2,20 +2,18 @@ import * as _ from 'lodash'
 
 export interface SentenceToken {
   text: string;
-  userDefined?: boolean;
-  alias?: string;
-  meta?: string;
+  entity?: string;
+  name?: string;
 }
 
 export interface Sentence {
-  id: string;
   data: SentenceToken[];
 }
 
 function strSplit(s: string, i: number) {
   const left = s.substr(0, i)
   const right = s.substr(i)
-  return [ left, right ]
+  return [left, right]
 }
 
 // collapses all sequential non user-defined tokens into one
@@ -23,17 +21,17 @@ function collapseData(s: Sentence) {
   const tokens = []
   let index = 0
   while (index < s.data.length) {
-    if (s.data[index].userDefined) {
+    if (s.data[index].entity) {
       tokens.push(s.data[index])
       index++;
     } else {
       let text = s.data[index].text
       index++;
-      while (index < s.data.length && !s.data[index].userDefined) {
+      while (index < s.data.length && !s.data[index].entity) {
         text += s.data[index].text
         index++;
       }
-      tokens.push({ userDefined: false, text })
+      tokens.push({ text })
     }
   }
   s.data = tokens
@@ -60,10 +58,10 @@ export class Sentence {
       if (-delta >= s.data[token].text.length) {
         return s
       }
-      if (token === s.data.length -1 || s.data[token + 1].userDefined) {
-        const [ left, right ] = strSplit(s.data[token].text, s.data[token].text.length + delta)
+      if (token === s.data.length - 1 || s.data[token + 1].entity) {
+        const [left, right] = strSplit(s.data[token].text, s.data[token].text.length + delta)
         s.data[token].text = left
-        s.data.splice(token + 1, 0, { userDefined: false, text: right })
+        s.data.splice(token + 1, 0, { text: right })
         return s
       }
       return this.extendLeft(s, token + 1, -delta)
@@ -72,7 +70,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token + 1
     let curDelta = delta
-    while (curToken < s.data.length && s.data[token].userDefined !== s.data[curToken].userDefined) {
+    while ((curToken < s.data.length) && (s.data[token].entity !== s.data[curToken].entity)) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         s.data[token].text += s.data[curToken].text.substr(0, curDelta)
@@ -98,11 +96,11 @@ export class Sentence {
       if (-delta >= s.data[token].text.length) {
         return s
       }
-      if (token === 0 || s.data[token -1].userDefined) {
+      if (token === 0 || s.data[token - 1].entity) {
         // left border or aliased neighbour; do not extend left but create new token
-        const [ left, right ] = strSplit(s.data[token].text, - delta)
+        const [left, right] = strSplit(s.data[token].text, - delta)
         s.data[token].text = right
-        s.data.splice(token, 0, { userDefined: false, text: left })
+        s.data.splice(token, 0, { text: left })
         return s
       }
       return this.extendRight(s, token - 1, -delta)
@@ -111,7 +109,7 @@ export class Sentence {
     // "eat" tokens while delta > next token text length
     let curToken = token - 1
     let curDelta = delta
-    while (curToken >= 0 && s.data[token].userDefined !== s.data[curToken].userDefined) {
+    while (curToken >= 0 && s.data[token].entity !== s.data[curToken].entity) {
       if (curDelta < s.data[curToken].text.length) {
         // last; add substr of token to current
         let t = s.data[curToken].text
@@ -137,9 +135,9 @@ export class Sentence {
       return s
     }
 
-    const [ left, right ] = strSplit(s.data[token].text, index)
+    const [left, right] = strSplit(s.data[token].text, index)
     s.data[token].text = left
-    const newToken: SentenceToken = { text: right, userDefined: false }
+    const newToken: SentenceToken = { text: right }
     s.data.splice(token + 1, 0, newToken)
     return s
   }
@@ -164,13 +162,13 @@ export class Sentence {
 
   static changeToken(s: Sentence, token: number, data: SentenceToken): Sentence {
     s = _.cloneDeep(s);
-    s.data[token] = { ...s.data[token], ...data}
+    s.data[token] = { ...s.data[token], ...data }
     return s
   }
 
   static neutralizeToken(s: Sentence, token: number): Sentence {
     s = _.cloneDeep(s);
-    s.data[token] = { userDefined: false, text: s.data[token].text }
+    s.data[token] = { text: s.data[token].text }
     return collapseData(s)
   }
 
@@ -180,24 +178,24 @@ export class Sentence {
     const tokenData = s.data[token]
     s.data.splice(token, 1)
 
-    let [ first, rest ] = strSplit(tokenData.text, start)
+    let [first, rest] = strSplit(tokenData.text, start)
 
-    if (first.length > 0 ) {
+    if (first.length > 0) {
       // insert token left
-      s.data.splice(token, 0, { userDefined: false, text: first })
+      s.data.splice(token, 0, { text: first })
       token++
     }
 
     let newToken = 0
 
-    let [ main, remain ] = strSplit(rest, end - start)
+    let [main, remain] = strSplit(rest, end - start)
     if (main.length) {
-      s.data.splice(token, 0, { ...tokenData, ...add, userDefined: true, text: main })
+      s.data.splice(token, 0, { ...tokenData, ...add, text: main })
       newToken = token
       token++
     }
     if (remain.length) {
-      s.data.splice(token, 0, { userDefined: false, text: remain })
+      s.data.splice(token, 0, { text: remain })
     }
 
     return { sentence: s, newToken }
