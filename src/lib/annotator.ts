@@ -1,4 +1,7 @@
-import * as _ from 'lodash'
+import defaults from 'lodash/defaults'
+import cloneDeep from 'lodash/cloneDeep'
+
+const _ = { defaults, cloneDeep }
 
 export interface SentenceToken {
   text: string;
