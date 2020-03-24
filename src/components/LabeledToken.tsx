@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { SentenceToken } from '../lib/annotator'
 import { Popover, Position } from '@blueprintjs/core'
-import LabeledTokenPopover from './LabeledTokenPopover'
+import DefaultTokenPopover from './DefaultTokenPopover'
 
 interface Props {
   token: SentenceToken
@@ -17,6 +17,15 @@ interface Props {
   onDeSelect: () => void
   dragMode: DragMode
   setDragMode: (dragMode: DragMode) => void
+  tokenPopover?: TokenPopover
+}
+
+export type TokenPopover = (props: PopoverProps) => JSX.Element
+
+export interface PopoverProps {
+  token: SentenceToken
+  onChange: (token: SentenceToken) => void
+  onTokenRemove: () => void
 }
 
 export enum DragMode { NONE, LEFT, RIGHT, MOVE }
@@ -120,9 +129,15 @@ export default class Token extends React.Component<Props, State> {
   }
 
   render() {
-    const { token, index, selected, onSelect, onRemove, onChange } = this.props
+    const { token, index, selected, onSelect, onRemove, onChange, tokenPopover } = this.props
+    const popoverProps: PopoverProps = {
+      token,
+      onChange: (token: SentenceToken) => onChange(token, index),
+      onTokenRemove: () => onRemove(token, index),
+    }
+
     return (
-      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction}>
+      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} >
         <span
           className={classNames('meta', { selected }, metaClass(token.entity || 'meta'))}
           onClick={() => onSelect(token, index)}>
@@ -132,7 +147,7 @@ export default class Token extends React.Component<Props, State> {
           {token.text}
           <span></span>
         </span>
-        <LabeledTokenPopover onTokenRemove={() => onRemove(token, index)} token={token} onChange={token => onChange(token, index)} />
+        {tokenPopover ? tokenPopover(popoverProps) : <DefaultTokenPopover {...popoverProps} />}
       </Popover>
     )
   }

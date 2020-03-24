@@ -1,13 +1,14 @@
 import * as React from "react"
 import { Sentence, SentenceToken } from '../lib/annotator'
 
-import LabeledToken, { DragMode } from './LabeledToken'
+import LabeledToken, { DragMode, TokenPopover } from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
 
 interface Props {
   value: Sentence
   onChange: (s: Sentence) => void
   onReload: (s: Sentence) => void
+  tokenPopover?: TokenPopover
 };
 
 interface State {
@@ -111,6 +112,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   render() {
+    const { tokenPopover } = this.props
+
     return (
       <div className="sentence-editor--wrapper"
         contentEditable
@@ -141,6 +144,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
               onRemove={this.onTokenNeutralize}
               dragMode={index === this.state.selectedToken ? this.state.dragMode : DragMode.NONE}
               setDragMode={dragMode => this.setState({ dragMode })}
+              tokenPopover={tokenPopover}
             />
             : <UnlabeledToken
               key={index}

@@ -1,11 +1,13 @@
 import * as React from "react"
 import SentenceEditor from './components/SentenceEditor'
+import { TokenPopover } from './components/LabeledToken'
 import { Sentence } from './lib/annotator'
 import './css/main.css'
 
 interface Props {
   value: Sentence
   onChange: (s: Sentence) => void
+  tokenPopover?: TokenPopover
 };
 
 export default class Main extends React.Component<Props, { count: number }> {
