@@ -89,7 +89,10 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
   syncEditableContent = () => {
     if (!this.div.current) return
-    const spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
+
+    let spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
+    spans = spans.filter(s => s.innerText.length > 0)
+
     const text = this.div.current.innerText
     if (!spans.length) {
       let sentence = { ...this.props.value, data: [{ text }] }
@@ -126,6 +129,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
         }}
         onInput={() => this.setState({ contentDirty: true })}
         onBlur={this.syncEditableContent}
+        onClick={() => this.div.current?.innerText ? this.syncEditableContent() : null}
         ref={this.div}>
         {this.props.value.data.map((value, index) =>
           value.entity !== undefined
