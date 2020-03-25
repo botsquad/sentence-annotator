@@ -13,7 +13,7 @@ as a React component.
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-import SentenceEditor from '@botsquad/sentence-annotator';
+import SentenceAnnotator from '@botsquad/sentence-annotator';
 
 const initial = {
   data: [
