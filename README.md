@@ -10,46 +10,43 @@ as a React component.
 ## Example code
 
 ```javascript
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
 
 import SentenceEditor from '@botsquad/sentence-annotator';
 
-const sentence = {
-  id: 'f9b44dee-1562-448c-8b37-1cd3b2399160',
+const initial = {
   data: [
     {
       text: 'whatever you do, please please do remember that my ',
-      userDefined: false
     },
     {
       text: 'nickname',
-      alias: 'type',
-      meta: '@name-type',
-      userDefined: true
+      name: 'type',
+      entity: '@name-type',
     },
     {
       text: ' is ',
-      userDefined: false
     },
     {
       text: 'pete',
-      alias: 'nick-name',
-      meta: '@nick-name',
-      userDefined: true
+      name: 'nick-name',
+      entity: '@nick-name',
     }
   ],
-  isTemplate: false,
-  count: 1,
-  updated: 0
 };
 
+const Example = () => {
+  const [sentence, setSentence] = useState<Sentence>(initial)
 
-ReactDOM.render(
-  <div>
-    <h1>SentenceEditor component</h1>
-    <SentenceEditor sentence={sentence} />
-  </div>,
-  document.getElementById("root")
+  return (
+    <div>
+      <h1>SentenceEditor component</h1>
+      <SentenceAnnotator value={sentence} onChange={setSentence} autoFocus />
+    </div>
+  )
+}
+
+ReactDOM.render(<Example />,  document.getElementById("root"))
 );
 ```

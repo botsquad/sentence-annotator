@@ -1,14 +1,20 @@
 import * as React from "react"
 import { Sentence, SentenceToken } from '../lib/annotator'
 
-import LabeledToken, { DragMode, TokenPopover } from './LabeledToken'
+import LabeledToken, { DragMode } from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
+import { TokenPopover } from './LabeledToken'
 
-interface Props {
+export interface ExternalProps {
   value: Sentence
   onChange: (s: Sentence) => void
-  onReload: (s: Sentence) => void
   tokenPopover?: TokenPopover
+  autoFocus?: boolean
+};
+
+interface Props extends ExternalProps {
+  onChange: (s: Sentence) => void
+  onReload: (s: Sentence) => void
 };
 
 interface State {
@@ -159,5 +165,12 @@ export default class SentenceEditor extends React.Component<Props, State> {
         )}
       </div>
     )
+  }
+
+  componentDidMount() {
+    const { autoFocus } = this.props
+    if (autoFocus) {
+      this.div.current?.focus()
+    }
   }
 }
