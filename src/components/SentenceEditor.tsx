@@ -37,9 +37,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onTokenClick = (t: SentenceToken, index: number) => {
-    if (this.state.contentDirty) {
-      this.syncEditableContent()
-    }
+    this.syncEditableContent()
 
     if (t.entity !== undefined) {
       this.setState({ selectedToken: index })
@@ -94,7 +92,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
   div = React.createRef<HTMLDivElement>()
 
   syncEditableContent = () => {
-    if (!this.div.current) return
+    if (!this.div.current || !this.state.contentDirty) return
 
     let spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
     spans = spans.filter(s => s.innerText.length > 0)
