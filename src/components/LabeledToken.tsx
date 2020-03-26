@@ -128,6 +128,10 @@ export default class Token extends React.Component<Props, State> {
     }
   }
 
+  formatTitle({ entity }: SentenceToken) {
+    return entity
+  }
+
   render() {
     const { token, index, selected, onSelect, onRemove, onChange, tokenPopover } = this.props
     const popoverProps: PopoverProps = {
@@ -137,8 +141,9 @@ export default class Token extends React.Component<Props, State> {
     }
 
     return (
-      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} >
+      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} enforceFocus={false}>
         <span
+          title={this.formatTitle(token)}
           className={classNames('meta', { selected }, metaClass(token.entity || 'meta'))}
           onClick={() => onSelect(token, index)}>
           {selected ? this.renderHandle(true) : null}
