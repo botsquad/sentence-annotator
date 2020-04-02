@@ -7,33 +7,40 @@ interface Props {
   onSelect: (token: SentenceToken, index: number, start: number, end: number) => void
   onClick: () => void
 }
+interface State {
+  startOffset?: number
+  endOffset?: number
+}
 
-export default class UnlabeledToken extends React.Component<Props, {}> {
+export default class UnlabeledToken extends React.Component<Props, State> {
 
   span = React.createRef<HTMLSpanElement>()
 
   state = {
-    selectedText: ''
-  }
+    startOffset: undefined,
+    endOffset: undefined
+  } as State
 
   selectionChange = () => {
     const node = this.span.current
     const selection = window.getSelection()
 
     if (selection?.anchorNode?.parentElement === node && selection?.focusNode?.parentElement === node) {
-      const selectedText = selection.toString()
-      this.setState({ selectedText })
+      const { startOffset, endOffset } = selection.getRangeAt(0)
+      if (endOffset > startOffset) {
+        this.setState({ startOffset, endOffset })
+      }
     }
   }
 
   setSelection() {
-    if (!this.state.selectedText.length) {
+    const { startOffset, endOffset } = this.state
+    if (startOffset === undefined || endOffset === undefined) {
       return
     }
-    const pos = this.props.token.text.search(new RegExp(this.state.selectedText))
-    if (pos >= 0) {
-      this.props.onSelect(this.props.token, this.props.index, pos, pos + this.state.selectedText.length)
-    }
+
+    this.props.onSelect(this.props.token, this.props.index, startOffset, endOffset)
+    this.setState({ startOffset: undefined, endOffset: undefined })
   }
 
   mouseUp = () => {
