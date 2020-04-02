@@ -30,6 +30,38 @@ export default class SentenceEditor extends React.Component<Props, State> {
     dragMode: DragMode.NONE
   }
 
+  onPaste = (e: any) => {
+    const event = e as ClipboardEvent
+
+    const selection = window.getSelection()
+    if (!selection || !selection.rangeCount) {
+      return
+    }
+
+    if (!this.div.current) {
+      return
+    }
+    let span = selection.anchorNode?.parentElement
+
+    while (span && (span.parentElement !== this.div.current)) {
+      span = span.parentElement
+    }
+    if (!span) return
+    let spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
+    const tokenIndex = spans.indexOf(span)
+    const stringIndex = selection.getRangeAt(0).startOffset
+
+    this.syncEditableContent()
+
+    event.stopPropagation()
+    event.preventDefault()
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const text = clipboardData.getData('Text').trim();
+
+    const value = Sentence.pasteTokenText(this.props.value, tokenIndex, stringIndex, text)
+    this.props.onChange(value)
+  }
+
   onTokenNeutralize = (_t: SentenceToken, index: number) => {
     const value = Sentence.neutralizeToken(this.props.value, index)
     this.props.onChange(value)
@@ -132,6 +164,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
           }
         }}
         onInput={() => this.setState({ contentDirty: true })}
+        onPaste={this.onPaste}
         onBlur={this.syncEditableContent}
         onClick={() => this.div.current?.innerText ? this.syncEditableContent() : null}
         ref={this.div}>

@@ -145,6 +145,12 @@ export class Sentence {
     return s
   }
 
+  static pasteTokenText(s: Sentence, token: number, textIndex: number, insertText: string) {
+    let text = s.data[token].text
+    text = text.substr(0, textIndex) + insertText + text.substr(textIndex)
+    return Sentence.changeToken(s, token, { text })
+  }
+
   static updateToken(s: Sentence, token: number, data: SentenceToken): Sentence {
     s = _.cloneDeep(s);
     s.data[token] = _.defaults(data, s.data[token])
