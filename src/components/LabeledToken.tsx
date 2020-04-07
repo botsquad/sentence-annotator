@@ -141,7 +141,7 @@ export default class Token extends React.Component<Props, State> {
     }
 
     return (
-      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} enforceFocus={false}>
+      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} enforceFocus={false} popoverClassName="labeled-token">
         <span
           title={this.formatTitle(token)}
           className={classNames('meta', { selected }, metaClass(token.entity || 'meta'))}
