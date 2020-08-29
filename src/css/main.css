@@ -1,13 +1,13 @@
-$bg0: rgba(100,255,100,0.3);
-$bg1: rgba(255,255,100,0.3);
-$bg2: rgba(0,255,0,0.3);
-$bg3: rgba(0,100,255,0.3);
-$bg4: rgba(100,100,0,0.3);
-$bg5: rgba(255,0,100,0.3);
-$bg6: rgba(0,100,255,0.3);
-$bg7: rgba(100,0,255,0.3);
-$bg8: rgba(255,0,255,0.3);
-$bg9: rgba(255,100,100,0.3);
+$bg0: rgba(100, 255, 100, 0.3);
+$bg1: rgba(255, 255, 100, 0.3);
+$bg2: rgba(0, 255, 0, 0.3);
+$bg3: rgba(0, 100, 255, 0.3);
+$bg4: rgba(100, 100, 0, 0.3);
+$bg5: rgba(255, 0, 100, 0.3);
+$bg6: rgba(0, 100, 255, 0.3);
+$bg7: rgba(100, 0, 255, 0.3);
+$bg8: rgba(255, 0, 255, 0.3);
+$bg9: rgba(255, 100, 100, 0.3);
 
 .sentence-editor--wrapper {
   outline: none;
@@ -17,16 +17,36 @@ $bg9: rgba(255,100,100,0.3);
     position: relative;
     .meta {
       line-height: 1.2;
-      &.m0 { background: $bg0; }
-      &.m1 { background: $bg1; }
-      &.m2 { background: $bg2; }
-      &.m3 { background: $bg3; }
-      &.m4 { background: $bg4; }
-      &.m5 { background: $bg5; }
-      &.m6 { background: $bg6; }
-      &.m7 { background: $bg7; }
-      &.m8 { background: $bg8; }
-      &.m9 { background: $bg9; }
+      &.m0 {
+        background: $bg0;
+      }
+      &.m1 {
+        background: $bg1;
+      }
+      &.m2 {
+        background: $bg2;
+      }
+      &.m3 {
+        background: $bg3;
+      }
+      &.m4 {
+        background: $bg4;
+      }
+      &.m5 {
+        background: $bg5;
+      }
+      &.m6 {
+        background: $bg6;
+      }
+      &.m7 {
+        background: $bg7;
+      }
+      &.m8 {
+        background: $bg8;
+      }
+      &.m9 {
+        background: $bg9;
+      }
     }
     .selected {
       /* background: yellow; */
@@ -34,19 +54,24 @@ $bg9: rgba(255,100,100,0.3);
 
     .meta .mouse-prevent {
       position: absolute;
-      top: -10px; bottom: -10px; left: -10px; right: -10px;
+      top: -10px;
+      bottom: -10px;
+      left: -10px;
+      right: -10px;
     }
 
     .handle {
       position: absolute;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: 0;
       width: 2px;
-      background: #6666FF;
+      background: #6666ff;
 
       div.dot {
         position: absolute;
-        width: 10px; height: 10px;
-        background: #6666FF;
+        width: 10px;
+        height: 10px;
+        background: #6666ff;
         border-radius: 50%;
         cursor: pointer;
         z-index: 10;

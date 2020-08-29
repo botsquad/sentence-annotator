@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import { Sentence, SentenceToken } from '../lib/annotator'
 
 import LabeledToken, { DragMode } from './LabeledToken'
@@ -10,15 +10,15 @@ export interface ExternalProps {
   onChange: (s: Sentence) => void
   tokenPopover?: TokenPopover
   autoFocus?: boolean
-};
+}
 
 interface Props extends ExternalProps {
   onChange: (s: Sentence) => void
   onReload: (s: Sentence) => void
-};
+}
 
 interface State {
-  selectedToken?: null | number;
+  selectedToken?: null | number
   contentDirty: boolean
   dragMode: DragMode
 }
@@ -43,7 +43,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     }
     let span = selection.anchorNode?.parentElement
 
-    while (span && (span.parentElement !== this.div.current)) {
+    while (span && span.parentElement !== this.div.current) {
       span = span.parentElement
     }
     if (!span) return
@@ -55,8 +55,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
     event.stopPropagation()
     event.preventDefault()
-    const clipboardData = event.clipboardData || (window as any).clipboardData;
-    const text = clipboardData.getData('Text').trim();
+    const clipboardData = event.clipboardData || (window as any).clipboardData
+    const text = clipboardData.getData('Text').trim()
 
     const value = Sentence.pasteTokenText(this.props.value, tokenIndex, stringIndex, text)
     this.props.onChange(value)
@@ -116,7 +116,10 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
-    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, { name: "", entity: "" })
+    const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, {
+      name: '',
+      entity: ''
+    })
     this.props.onChange(sentence)
     setTimeout(() => this.setState({ selectedToken: newToken }), 100)
   }
@@ -154,7 +157,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
     const { tokenPopover } = this.props
 
     return (
-      <div className="sentence-editor--wrapper"
+      <div
+        className="sentence-editor--wrapper"
         contentEditable
         spellCheck={false}
         suppressContentEditableWarning
@@ -166,12 +170,17 @@ export default class SentenceEditor extends React.Component<Props, State> {
         onInput={() => this.setState({ contentDirty: true })}
         onPaste={this.onPaste}
         onBlur={this.syncEditableContent}
-        onClick={() => this.div.current?.innerText ? this.syncEditableContent() : null}
-        ref={this.div}>
+        onClick={() => (this.div.current?.innerText ? this.syncEditableContent() : null)}
+        ref={this.div}
+      >
         {this.props.value.data.map((value, index) =>
-          value.entity !== undefined
-            ? <LabeledToken
-              key={index === this.state.selectedToken && this.state.dragMode !== DragMode.NONE ? `${value.name}${value.entity}` : index}
+          value.entity !== undefined ? (
+            <LabeledToken
+              key={
+                index === this.state.selectedToken && this.state.dragMode !== DragMode.NONE
+                  ? `${value.name}${value.entity}`
+                  : index
+              }
               index={index}
               token={value}
               selected={index === this.state.selectedToken}
@@ -187,12 +196,18 @@ export default class SentenceEditor extends React.Component<Props, State> {
               setDragMode={dragMode => this.setState({ dragMode })}
               tokenPopover={tokenPopover}
             />
-            : <UnlabeledToken
+          ) : (
+            <UnlabeledToken
               key={index}
               index={index}
               token={value}
-              onClick={() => { this.setState({ selectedToken: null }); this.syncEditableContent() }}
-              onSelect={this.onUnlabeledTextSelect} />
+              onClick={() => {
+                this.setState({ selectedToken: null })
+                this.syncEditableContent()
+              }}
+              onSelect={this.onUnlabeledTextSelect}
+            />
+          )
         )}
       </div>
     )

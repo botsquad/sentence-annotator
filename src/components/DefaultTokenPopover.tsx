@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import { Button, FormGroup } from '@blueprintjs/core'
 import { SentenceToken } from '../lib/annotator'
 
@@ -27,7 +27,6 @@ export default class extends React.Component<Props, {}> {
 
     return (
       <div className="labeled-token--popover-wrapper">
-
         <FormGroup label="Entity" labelFor="text-input">
           <input
             autoFocus

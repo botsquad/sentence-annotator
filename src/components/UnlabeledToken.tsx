@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import { SentenceToken } from '../lib/annotator'
 
 interface Props {
@@ -13,7 +13,6 @@ interface State {
 }
 
 export default class UnlabeledToken extends React.Component<Props, State> {
-
   span = React.createRef<HTMLSpanElement>()
 
   state = {
@@ -25,7 +24,10 @@ export default class UnlabeledToken extends React.Component<Props, State> {
     const node = this.span.current
     const selection = window.getSelection()
 
-    if (selection?.anchorNode?.parentElement === node && selection?.focusNode?.parentElement === node) {
+    if (
+      selection?.anchorNode?.parentElement === node &&
+      selection?.focusNode?.parentElement === node
+    ) {
       const { startOffset, endOffset } = selection.getRangeAt(0)
       if (endOffset > startOffset) {
         this.setState({ startOffset, endOffset })
@@ -44,21 +46,18 @@ export default class UnlabeledToken extends React.Component<Props, State> {
   }
 
   mouseUp = () => {
-    document.body.removeEventListener("mouseup", this.mouseUp)
+    document.body.removeEventListener('mouseup', this.mouseUp)
     this.setSelection()
   }
 
   onMouseDown = () => {
-    document.body.addEventListener("mouseup", this.mouseUp)
+    document.body.addEventListener('mouseup', this.mouseUp)
   }
 
   render() {
     const { token, onClick } = this.props
     return (
-      <span
-        ref={this.span}
-        onMouseDown={this.onMouseDown}
-        onClick={onClick}>
+      <span ref={this.span} onMouseDown={this.onMouseDown} onClick={onClick}>
         <span></span>
         {token.text}
         <span></span>
@@ -67,10 +66,10 @@ export default class UnlabeledToken extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    document.addEventListener("selectionchange", this.selectionChange)
+    document.addEventListener('selectionchange', this.selectionChange)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("selectionchange", this.selectionChange)
+    document.removeEventListener('selectionchange', this.selectionChange)
   }
 }

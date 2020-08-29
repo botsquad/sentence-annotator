@@ -6,9 +6,7 @@
   "main": "dist/sentence-annotator.umd.js",
   "module": "dist/sentence-annotator.es5.js",
   "typings": "dist/types/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "author": "Arjan Scherpenisse <arjan@scherpenisse.net>",
   "repository": {
     "type": "git",
@@ -36,10 +34,7 @@
     "travis-deploy-once": "travis-deploy-once"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts": [
-      "prettier --write",
-      "git add"
-    ]
+    "{src,test}/**/*.ts": ["prettier --write", "git add"]
   },
   "config": {
     "commitizen": {
@@ -52,16 +47,8 @@
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/",
-      "example"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "coveragePathIgnorePatterns": ["/node_modules/", "/test/", "example"],
     "coverageThreshold": {
       "global": {
         "branches": 90,
@@ -70,9 +57,7 @@
         "statements": 95
       }
     },
-    "collectCoverageFrom": [
-      "src/*.{js,ts,tsx}"
-    ],
+    "collectCoverageFrom": ["src/*.{js,ts,tsx}"],
     "moduleNameMapper": {
       "\\.(css|less|sass|scss)$": "../test/__mock__.ts"
     }
@@ -82,9 +67,7 @@
     "singleQuote": true
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.3",
@@ -109,7 +92,7 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-nested": "^4.2.1",
     "postcss-simple-vars": "^5.0.2",
-    "prettier": "^1.14.3",
+    "prettier": "^1.19.1",
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",

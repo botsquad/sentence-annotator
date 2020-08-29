@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import SentenceEditor, { ExternalProps } from './components/SentenceEditor'
 import { Sentence } from './lib/annotator'
 import './css/main.css'

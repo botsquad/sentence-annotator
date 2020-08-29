@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import classNames from 'classnames'
 
 import { SentenceToken } from '../lib/annotator'
@@ -28,7 +28,12 @@ export interface PopoverProps {
   onTokenRemove: () => void
 }
 
-export enum DragMode { NONE, LEFT, RIGHT, MOVE }
+export enum DragMode {
+  NONE,
+  LEFT,
+  RIGHT,
+  MOVE
+}
 
 interface State {
   originX: number | null
@@ -37,16 +42,14 @@ interface State {
 function metaClass(meta: string) {
   let sum = 0
   for (let i = 0; i < meta.length; i++) {
-    sum += meta.charCodeAt(i);
+    sum += meta.charCodeAt(i)
   }
   return 'm' + (sum % 10)
 }
 
-
 export default class Token extends React.Component<Props, State> {
-
   state: State = {
-    originX: null,
+    originX: null
   }
 
   mouseMove = (e: Event) => {
@@ -91,15 +94,15 @@ export default class Token extends React.Component<Props, State> {
 
   componentWillMount() {
     if (this.props.dragMode !== DragMode.NONE) {
-      document.body.addEventListener("mousemove", this.mouseMove)
-      document.body.addEventListener("mouseup", this.mouseUp)
+      document.body.addEventListener('mousemove', this.mouseMove)
+      document.body.addEventListener('mouseup', this.mouseUp)
     }
   }
 
   componentWillUnmount() {
     if (this.props.dragMode !== DragMode.NONE) {
-      document.body.removeEventListener("mousemove", this.mouseMove)
-      document.body.removeEventListener("mouseup", this.mouseUp)
+      document.body.removeEventListener('mousemove', this.mouseMove)
+      document.body.removeEventListener('mouseup', this.mouseUp)
     }
   }
 
@@ -110,8 +113,11 @@ export default class Token extends React.Component<Props, State> {
 
   renderHandle(left: boolean) {
     return (
-      <span className={"handle " + (left ? "left" : "right")} contentEditable={false}>
-        <div className="dot" onMouseDown={e => this.dragStart(e, left ? DragMode.LEFT : DragMode.RIGHT)}></div>
+      <span className={'handle ' + (left ? 'left' : 'right')} contentEditable={false}>
+        <div
+          className="dot"
+          onMouseDown={e => this.dragStart(e, left ? DragMode.LEFT : DragMode.RIGHT)}
+        ></div>
         <div className="line"></div>
       </span>
     )
@@ -137,15 +143,22 @@ export default class Token extends React.Component<Props, State> {
     const popoverProps: PopoverProps = {
       token,
       onChange: (token: SentenceToken) => onChange(token, index),
-      onTokenRemove: () => onRemove(token, index),
+      onTokenRemove: () => onRemove(token, index)
     }
 
     return (
-      <Popover isOpen={this.props.dragMode === DragMode.NONE && selected} position={Position.BOTTOM} onInteraction={this.onPopoverInteraction} enforceFocus={false} popoverClassName="labeled-token">
+      <Popover
+        isOpen={this.props.dragMode === DragMode.NONE && selected}
+        position={Position.BOTTOM}
+        onInteraction={this.onPopoverInteraction}
+        enforceFocus={false}
+        popoverClassName="labeled-token"
+      >
         <span
           title={this.formatTitle(token)}
           className={classNames('meta', { selected }, metaClass(token.entity || 'meta'))}
-          onClick={() => onSelect(token, index)}>
+          onClick={() => onSelect(token, index)}
+        >
           {selected ? this.renderHandle(true) : null}
           {selected ? this.renderHandle(false) : null}
           <span></span>
