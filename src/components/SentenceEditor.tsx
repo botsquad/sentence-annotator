@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Sentence, SentenceToken } from '../lib/annotator'
+import debounce from 'lodash/debounce'
 
 import LabeledToken, { DragMode } from './LabeledToken'
 import UnlabeledToken from './UnlabeledToken'
@@ -153,6 +154,35 @@ export default class SentenceEditor extends React.Component<Props, State> {
     this.props.onChange(sentence)
   }
 
+  inputDelayedChange = debounce(() => {
+    this.syncEditableContent()
+    setTimeout(() => {
+      const range = window.getSelection()?.getRangeAt(0)
+      if (!range) return
+
+      if (this.savedRange !== null && range) {
+        range.setStart(this.savedRange.node, this.savedRange.startOffset)
+        range.setEnd(this.savedRange.node, this.savedRange.endOffset)
+
+        window.getSelection()?.removeAllRanges()
+        window.getSelection()?.addRange(range)
+
+        this.savedRange = null
+      }
+    }, 10)
+  }, 200)
+
+  savedRange: { node: Node; startOffset: number; endOffset: number } | null = null
+
+  onInput = () => {
+    const range = window.getSelection()?.getRangeAt(0)
+    if (!range) return
+
+    const { startOffset, endOffset, startContainer } = range
+    this.savedRange = { startOffset, endOffset, node: startContainer }
+    this.setState({ contentDirty: true }, this.inputDelayedChange)
+  }
+
   render() {
     const { tokenPopover } = this.props
 
@@ -167,7 +197,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
             e.preventDefault()
           }
         }}
-        onInput={() => this.setState({ contentDirty: true })}
+        onInput={this.onInput}
         onPaste={this.onPaste}
         onBlur={this.syncEditableContent}
         onClick={() => (this.div.current?.innerText ? this.syncEditableContent() : null)}
@@ -197,17 +227,17 @@ export default class SentenceEditor extends React.Component<Props, State> {
               tokenPopover={tokenPopover}
             />
           ) : (
-            <UnlabeledToken
-              key={index}
-              index={index}
-              token={value}
-              onClick={() => {
-                this.setState({ selectedToken: null })
-                this.syncEditableContent()
-              }}
-              onSelect={this.onUnlabeledTextSelect}
-            />
-          )
+              <UnlabeledToken
+                key={index}
+                index={index}
+                token={value}
+                onClick={() => {
+                  this.setState({ selectedToken: null })
+                  this.syncEditableContent()
+                }}
+                onSelect={this.onUnlabeledTextSelect}
+              />
+            )
         )}
       </div>
     )
