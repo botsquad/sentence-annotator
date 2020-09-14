@@ -11,6 +11,7 @@ export interface ExternalProps {
   onChange: (s: Sentence) => void
   tokenPopover?: TokenPopover
   autoFocus?: boolean
+  noEntities?: boolean
 }
 
 interface Props extends ExternalProps {
@@ -128,6 +129,10 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   onUnlabeledTextSelect = (_t: SentenceToken, index: number, start: number, end: number) => {
+    if (this.props.noEntities) {
+      return
+    }
+
     const { sentence, newToken } = Sentence.splitSelectToken(this.props.value, index, start, end, {
       name: '',
       entity: ''
@@ -139,6 +144,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
   div = React.createRef<HTMLDivElement>()
 
   syncEditableContent = () => {
+    this.saveCursorPosition()
+
     if (!this.div.current || !this.state.contentDirty) return
 
     let spans = Array.prototype.slice.call(this.div.current.children) as HTMLSpanElement[]
@@ -167,12 +174,15 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
   savedRange: { node: Text; startOffset: number; endOffset: number } | null = null
 
-  onInput = () => {
+  saveCursorPosition = () => {
     const range = window.getSelection()?.getRangeAt(0)
     if (!range) return
 
     const { startOffset, endOffset, startContainer } = range
     this.savedRange = { startOffset, endOffset, node: startContainer as Text }
+  }
+
+  onInput = () => {
     this.setState({ contentDirty: true }, () => this.syncEditableContent())
   }
 
@@ -245,9 +255,12 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
   componentDidUpdate() {
     const range = window.getSelection()?.getRangeAt(0)
-    if (!range) return
 
-    if (this.savedRange !== null && range) {
+    if (this.savedRange === null) {
+      return
+    }
+
+    if (range) {
       range.setStart(
         this.savedRange.node,
         Math.min(this.savedRange.startOffset, this.savedRange.node.length)
@@ -259,8 +272,8 @@ export default class SentenceEditor extends React.Component<Props, State> {
 
       window.getSelection()?.removeAllRanges()
       window.getSelection()?.addRange(range)
-
-      this.savedRange = null
     }
+
+    this.saveCursorPosition()
   }
 }
