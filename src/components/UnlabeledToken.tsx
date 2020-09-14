@@ -59,7 +59,8 @@ export default class UnlabeledToken extends React.Component<Props, State> {
     return (
       <span ref={this.span} onMouseDown={this.onMouseDown} onClick={onClick}>
         <span></span>
-        {token.text}
+        {token.text || '\u{200d}'}
+        {/* zero-width joiner on empty span */}
         <span></span>
       </span>
     )
