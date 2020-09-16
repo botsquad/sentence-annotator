@@ -3,17 +3,26 @@ import SentenceEditor, { ExternalProps } from './components/SentenceEditor'
 import { Sentence } from './lib/annotator'
 import './css/main.css'
 
-export default class Main extends React.Component<ExternalProps, { count: number }> {
-  state = { count: 0 }
+type State = { count: number; shouldFocus: boolean }
 
-  onReload = (s: Sentence) => {
+export default class Main extends React.Component<ExternalProps, State> {
+  state = { count: 0, shouldFocus: false }
+
+  onReload = (s: Sentence, shouldFocus: boolean) => {
     const { count } = this.state
-    this.setState({ count: count + 1 }, () => this.props.onChange(s))
+    this.setState({ shouldFocus, count: count + 1 }, () => this.props.onChange(s))
   }
 
   render() {
     const { count } = this.state
 
-    return <SentenceEditor key={count} onReload={this.onReload} {...this.props} />
+    return (
+      <SentenceEditor
+        key={count}
+        onReload={this.onReload}
+        {...this.props}
+        autoFocus={this.props.autoFocus || this.state.shouldFocus}
+      />
+    )
   }
 }

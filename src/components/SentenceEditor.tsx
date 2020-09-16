@@ -16,7 +16,7 @@ export interface ExternalProps {
 
 interface Props extends ExternalProps {
   onChange: (s: Sentence) => void
-  onReload: (s: Sentence) => void
+  onReload: (s: Sentence, shouldFocus: boolean) => void
 }
 
 interface State {
@@ -36,7 +36,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     dragMode: DragMode.NONE
   }
 
-  _force: boolean = false
+  _force = false
 
   shouldComponentUpdate(nextProps: Props) {
     if (this._force) {
@@ -44,7 +44,11 @@ export default class SentenceEditor extends React.Component<Props, State> {
       return true
     }
 
-    return !isEqual(nextProps.value, this.props.value) || this.state.dragMode !== DragMode.NONE
+    return (
+      !isEqual(nextProps.value, this.props.value) ||
+      this.state.dragMode !== DragMode.NONE ||
+      this.state.selectedToken !== null
+    )
   }
 
   onPaste = (e: any) => {
@@ -154,7 +158,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     const text = strip(this.div.current.innerText)
     if (!spans.length) {
       let sentence = { ...this.props.value, data: [{ text }] }
-      this.props.onReload(sentence)
+      this.props.onReload(sentence, this.savedRange !== null)
       return
     }
 
@@ -164,7 +168,7 @@ export default class SentenceEditor extends React.Component<Props, State> {
     })
     if (spans.length !== sentence.data.length) {
       sentence = { ...sentence, data: sentence.data.slice(0, spans.length) }
-      this.props.onReload(sentence)
+      this.props.onReload(sentence, this.savedRange !== null)
       return
     }
 
@@ -175,7 +179,16 @@ export default class SentenceEditor extends React.Component<Props, State> {
   savedRange: { node: Text; startOffset: number; endOffset: number } | null = null
 
   saveCursorPosition = () => {
-    const range = window.getSelection()?.getRangeAt(0)
+    if (this.state.selectedToken !== null) {
+      this.savedRange = null
+      return
+    }
+    let range: Range | undefined
+    try {
+      range = window.getSelection()?.getRangeAt(0)
+    } catch {
+      return
+    }
     if (!range) return
 
     const { startOffset, endOffset, startContainer } = range
