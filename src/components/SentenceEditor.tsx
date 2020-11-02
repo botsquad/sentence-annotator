@@ -267,25 +267,24 @@ export default class SentenceEditor extends React.Component<Props, State> {
   }
 
   componentDidUpdate() {
-    const range = window.getSelection()?.getRangeAt(0)
+    const selection = window.getSelection()
+    const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
 
-    if (this.savedRange === null) {
+    if (range === null || this.savedRange === null) {
       return
     }
 
-    if (range) {
-      range.setStart(
-        this.savedRange.node,
-        Math.min(this.savedRange.startOffset, this.savedRange.node.length)
-      )
-      range.setEnd(
-        this.savedRange.node,
-        Math.min(this.savedRange.endOffset, this.savedRange.node.length)
-      )
+    range.setStart(
+      this.savedRange.node,
+      Math.min(this.savedRange.startOffset, this.savedRange.node.length)
+    )
+    range.setEnd(
+      this.savedRange.node,
+      Math.min(this.savedRange.endOffset, this.savedRange.node.length)
+    )
 
-      window.getSelection()?.removeAllRanges()
-      window.getSelection()?.addRange(range)
-    }
+    window.getSelection()?.removeAllRanges()
+    window.getSelection()?.addRange(range)
 
     this.saveCursorPosition()
   }
