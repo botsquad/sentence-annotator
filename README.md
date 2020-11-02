@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.com/botsquad/sentence-annotator.svg?branch=master)](https://travis-ci.com/botsquad/sentence-annotator)
 [![npm (scoped)](https://img.shields.io/npm/v/@botsquad/sentence-annotator)](https://www.npmjs.com/package/@botsquad/sentence-annotator)
 
-This is a React component for creating a text input box which understands Dialogflow's *user
-utterance* JSON format, and allows one to use an interface similar to Dialogflow's utterance editor
+This is a React component for creating a text input box which understands Dialogflow's _user
+utterance_ JSON format, and allows one to use an interface similar to Dialogflow's utterance editor
 as a React component.
 
 ## Example code
@@ -13,7 +13,7 @@ as a React component.
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-import SentenceAnnotator from '@botsquad/sentence-annotator';
+import { SentenceAnnotator } from '@botsquad/sentence-annotator';
 
 const initial = {
   data: [
@@ -50,3 +50,6 @@ const Example = () => {
 ReactDOM.render(<Example />,  document.getElementById("root"))
 );
 ```
+
+There is also a `StringSentenceAnnotator` component which works similarly, but converts the result
+to a string; which contains the annotations in markdown syntax.

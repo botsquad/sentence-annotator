@@ -29,7 +29,7 @@ const strip = (input: string): string => {
   return input.replace('\u{200d}', '').replace('\n', '')
 }
 
-export default class SentenceEditor extends React.Component<Props, State> {
+export class SentenceEditor extends React.Component<Props, State> {
   state: State = {
     selectedToken: null,
     contentDirty: false,
