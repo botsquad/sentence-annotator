@@ -140,6 +140,6 @@
   "dependencies": {
     "@types/marked": "^1.1.0",
     "classnames": "^2.2.6",
-    "marked": "^1.2.2"
+    "marked": "^2.0.0"
   }
 }
